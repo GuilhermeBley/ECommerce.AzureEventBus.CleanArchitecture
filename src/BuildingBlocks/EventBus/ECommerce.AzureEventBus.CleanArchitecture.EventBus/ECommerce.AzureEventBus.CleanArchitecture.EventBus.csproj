@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\ECommerce.AzureEventBus.CleanArchitecture.Catalog.Core\ECommerce.AzureEventBus.CleanArchitecture.Catalog.Core.csproj" />
-	</ItemGroup>
-
 </Project>

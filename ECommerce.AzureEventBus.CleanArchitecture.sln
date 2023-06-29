@@ -9,9 +9,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{61
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{AA287965-999C-41CF-9F95-90C5E7C0D3C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.AzureEventBus.CleanArchitecture.Catalog.Application", "src\Services\Catalog\ECommerce.AzureEventBus.CleanArchitecture.Catalog.Application\ECommerce.AzureEventBus.CleanArchitecture.Catalog.Application.csproj", "{7A85453E-422F-4EFB-9E2E-3F7CDAA76B1E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.AzureEventBus.CleanArchitecture.Catalog.Core", "src\Services\Catalog\ECommerce.AzureEventBus.CleanArchitecture.Catalog.Core\ECommerce.AzureEventBus.CleanArchitecture.Catalog.Core.csproj", "{525C724A-8E0A-44B0-931E-646F1C667E43}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{83CE38DC-8D68-463D-A8D1-2F561598F23A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventBus", "EventBus", "{12BA0AD3-3A45-45CF-9D5C-AD4182FCF375}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.AzureEventBus.CleanArchitecture.EventBus", "src\BuildingBlocks\EventBus\ECommerce.AzureEventBus.CleanArchitecture.EventBus\ECommerce.AzureEventBus.CleanArchitecture.EventBus.csproj", "{CA86F55D-7AAA-4249-808B-25ED648A5AB3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.AzureEventBus.CleanArchitecture.Catalog.Application", "src\Services\Catalog\ECommerce.AzureEventBus.CleanArchitecture.Catalog.Application\ECommerce.AzureEventBus.CleanArchitecture.Catalog.Application.csproj", "{49DB5B5B-FCC9-4C2F-A637-32EB42384F3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,19 +28,26 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7A85453E-422F-4EFB-9E2E-3F7CDAA76B1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A85453E-422F-4EFB-9E2E-3F7CDAA76B1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A85453E-422F-4EFB-9E2E-3F7CDAA76B1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A85453E-422F-4EFB-9E2E-3F7CDAA76B1E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{525C724A-8E0A-44B0-931E-646F1C667E43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{525C724A-8E0A-44B0-931E-646F1C667E43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{525C724A-8E0A-44B0-931E-646F1C667E43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{525C724A-8E0A-44B0-931E-646F1C667E43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA86F55D-7AAA-4249-808B-25ED648A5AB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA86F55D-7AAA-4249-808B-25ED648A5AB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA86F55D-7AAA-4249-808B-25ED648A5AB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA86F55D-7AAA-4249-808B-25ED648A5AB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49DB5B5B-FCC9-4C2F-A637-32EB42384F3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49DB5B5B-FCC9-4C2F-A637-32EB42384F3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49DB5B5B-FCC9-4C2F-A637-32EB42384F3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49DB5B5B-FCC9-4C2F-A637-32EB42384F3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{612C158A-9192-40EC-AC2A-EB345ACE1D31} = {C9AA84CD-A1EF-45B9-AD02-9279573E0C7A}
 		{AA287965-999C-41CF-9F95-90C5E7C0D3C9} = {612C158A-9192-40EC-AC2A-EB345ACE1D31}
-		{7A85453E-422F-4EFB-9E2E-3F7CDAA76B1E} = {AA287965-999C-41CF-9F95-90C5E7C0D3C9}
 		{525C724A-8E0A-44B0-931E-646F1C667E43} = {AA287965-999C-41CF-9F95-90C5E7C0D3C9}
+		{83CE38DC-8D68-463D-A8D1-2F561598F23A} = {C9AA84CD-A1EF-45B9-AD02-9279573E0C7A}
+		{12BA0AD3-3A45-45CF-9D5C-AD4182FCF375} = {83CE38DC-8D68-463D-A8D1-2F561598F23A}
+		{CA86F55D-7AAA-4249-808B-25ED648A5AB3} = {12BA0AD3-3A45-45CF-9D5C-AD4182FCF375}
+		{49DB5B5B-FCC9-4C2F-A637-32EB42384F3E} = {AA287965-999C-41CF-9F95-90C5E7C0D3C9}
 	EndGlobalSection
 EndGlobal
