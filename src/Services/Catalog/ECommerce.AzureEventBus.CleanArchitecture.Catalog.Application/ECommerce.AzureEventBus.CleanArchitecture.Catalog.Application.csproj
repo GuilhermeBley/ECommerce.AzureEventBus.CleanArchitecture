@@ -10,4 +10,8 @@
 		<ProjectReference Include="..\ECommerce.AzureEventBus.CleanArchitecture.Catalog.Core\ECommerce.AzureEventBus.CleanArchitecture.Catalog.Core.csproj" />
 	</ItemGroup>
 
+  <PropertyGroup>
+    <MSBuildWarningsAsMessages>MSB3101</MSBuildWarningsAsMessages>
+  </PropertyGroup>
+
 </Project>
