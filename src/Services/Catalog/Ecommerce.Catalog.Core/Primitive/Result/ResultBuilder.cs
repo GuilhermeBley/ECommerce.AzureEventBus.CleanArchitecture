@@ -23,6 +23,24 @@ public sealed class ResultBuilder<TResult>
         _errors.AddRange(errors);
     }
 
+    public void AddIfLength(string? str, string message, int code = DEFAULT_CODE, int minValue = 0, int maxValue = int.MaxValue, bool addIfNull = true)
+    {
+        if (minValue < 0)
+            throw new ArgumentOutOfRangeException("minValue");
+
+        if (str is null && !addIfNull)
+            return;
+
+        if (str is null)
+        {
+            Add(message, code);
+            return;
+        }
+
+        if (str.Length < minValue || str.Length > maxValue)
+            Add(message, code);
+    }
+
     public void AddIfNullOrWhiteSpace(string? str, string message, int code = DEFAULT_CODE)
         => AddIf(string.IsNullOrWhiteSpace(str), message, code);
 
@@ -73,7 +91,7 @@ public sealed class ResultBuilder<TResult>
         if (result is null)
             return false;
 
-        resultValue = Result<TResult>.Success(result); 
+        resultValue = Result<TResult>.Success(result);
         return true;
     }
 
@@ -84,9 +102,15 @@ public sealed class ResultBuilder<TResult>
         if (!HasError)
             return false;
 
-        resultValue = Result<TResult>.Failed(_errors.AsReadOnly()); 
+        resultValue = Result<TResult>.Failed(_errors.AsReadOnly());
         return true;
     }
+
+    public static Result<TResult> CreateFailed(string message, int code = DEFAULT_CODE)
+        => Result<TResult>.Failed(new Error(code, message));
+
+    public static Result<TResult> CreateSuccess(TResult result)
+        => Result<TResult>.Success(result ?? throw new ArgumentNullException("result"));
 
     private record Error(int Code, string Message) : ICoreError;
 }
