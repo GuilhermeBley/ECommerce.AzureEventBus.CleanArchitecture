@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventBus", "EventBus", "{677EA071-442F-4450-811D-D387C58707DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.AzureEventBus.CleanArchitecture.EventBus", "src\BuildingBlocks\EventBus\ECommerce.AzureEventBus.CleanArchitecture.EventBus\ECommerce.AzureEventBus.CleanArchitecture.EventBus.csproj", "{EDA8854D-127C-45FC-9B48-13A831A9C61B}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{EA2C817E-5403-4BFC-A934-8206F9FC2D3E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{947E7B87-6B1C-46AA-AF6F-08B45CCDA4A7}"
@@ -18,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Catalog.Application", "src\Services\Catalog\Ecommerce.Catalog.Application\Ecommerce.Catalog.Application.csproj", "{C6A36401-7C45-4CC6-883A-21C85A344D39}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Catalog.Core", "src\Services\Catalog\Ecommerce.Catalog.Core\Ecommerce.Catalog.Core.csproj", "{F852D9E8-7E51-437C-BB6E-2191C3CBC919}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.EventBus", "src\BuildingBlocks\EventBus\ECommerce.EventBus\ECommerce.EventBus.csproj", "{B76C7BD0-D5CA-4A94-AE07-6B0DE6594728}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +28,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EDA8854D-127C-45FC-9B48-13A831A9C61B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EDA8854D-127C-45FC-9B48-13A831A9C61B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EDA8854D-127C-45FC-9B48-13A831A9C61B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EDA8854D-127C-45FC-9B48-13A831A9C61B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C6A36401-7C45-4CC6-883A-21C85A344D39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C6A36401-7C45-4CC6-883A-21C85A344D39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6A36401-7C45-4CC6-883A-21C85A344D39}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -40,14 +36,18 @@ Global
 		{F852D9E8-7E51-437C-BB6E-2191C3CBC919}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F852D9E8-7E51-437C-BB6E-2191C3CBC919}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F852D9E8-7E51-437C-BB6E-2191C3CBC919}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B76C7BD0-D5CA-4A94-AE07-6B0DE6594728}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B76C7BD0-D5CA-4A94-AE07-6B0DE6594728}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B76C7BD0-D5CA-4A94-AE07-6B0DE6594728}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B76C7BD0-D5CA-4A94-AE07-6B0DE6594728}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B96A685F-666A-4231-B940-88C41212C7D6} = {2BEC847B-FE6C-4198-9122-6A66C9BF2C80}
 		{677EA071-442F-4450-811D-D387C58707DB} = {B96A685F-666A-4231-B940-88C41212C7D6}
-		{EDA8854D-127C-45FC-9B48-13A831A9C61B} = {677EA071-442F-4450-811D-D387C58707DB}
 		{EA2C817E-5403-4BFC-A934-8206F9FC2D3E} = {2BEC847B-FE6C-4198-9122-6A66C9BF2C80}
 		{947E7B87-6B1C-46AA-AF6F-08B45CCDA4A7} = {EA2C817E-5403-4BFC-A934-8206F9FC2D3E}
 		{C6A36401-7C45-4CC6-883A-21C85A344D39} = {947E7B87-6B1C-46AA-AF6F-08B45CCDA4A7}
 		{F852D9E8-7E51-437C-BB6E-2191C3CBC919} = {947E7B87-6B1C-46AA-AF6F-08B45CCDA4A7}
+		{B76C7BD0-D5CA-4A94-AE07-6B0DE6594728} = {677EA071-442F-4450-811D-D387C58707DB}
 	EndGlobalSection
 EndGlobal
