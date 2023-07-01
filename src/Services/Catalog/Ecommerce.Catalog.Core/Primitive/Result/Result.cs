@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace ECommerce.AzureEventBus.CleanArchitecture.Catalog.Core.Primitive.Result;
+namespace ECommerce.Catalog.Core.Primitive.Result;
 
 public class Result<TResult> : ResultBase
 {

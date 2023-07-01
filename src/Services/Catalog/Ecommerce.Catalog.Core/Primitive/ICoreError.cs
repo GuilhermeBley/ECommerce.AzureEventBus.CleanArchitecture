@@ -1,4 +1,4 @@
-namespace ECommerce.AzureEventBus.CleanArchitecture.Catalog.Core.Primitive;
+namespace ECommerce.Catalog.Core.Primitive;
 
 public interface ICoreError
 {
