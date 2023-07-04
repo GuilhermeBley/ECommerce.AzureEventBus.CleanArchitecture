@@ -97,7 +97,7 @@ public sealed class ResultBuilder<TResult>
         if (result is null)
             return false;
 
-        resultValue = Result<TResult>.Success(result); 
+        resultValue = Result<TResult>.Success(result);
         return true;
     }
 
@@ -108,9 +108,15 @@ public sealed class ResultBuilder<TResult>
         if (!HasError)
             return false;
 
-        resultValue = Result<TResult>.Failed(_errors.AsReadOnly()); 
+        resultValue = Result<TResult>.Failed(_errors.AsReadOnly());
         return true;
     }
+
+    public static Result<TResult> CreateFailed(string message, int code = DEFAULT_CODE)
+        => Result<TResult>.Failed(new Error(code, message));
+
+    public static Result<TResult> CreateSuccess(TResult result)
+        => Result<TResult>.Success(result ?? throw new ArgumentNullException("result"));
 
     private record Error(int Code, string Message) : ICoreError;
 }
