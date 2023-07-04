@@ -23,6 +23,30 @@ public sealed class ResultBuilder<TResult>
         _errors.AddRange(errors);
     }
 
+    public void AddIfIsInRange(
+        string? str, 
+        string message, 
+        int minValue = 0, 
+        int maxValue = int.MaxValue, 
+        bool checkNull = true, 
+        int code = DEFAULT_CODE)
+    {
+        if (checkNull && str is null)
+        {
+            Add(message: message, code: code);
+            return;
+        }
+
+        if (str is null)
+            return;
+
+        if (str.Length < minValue || str.Length > maxValue)
+        {
+            Add(message: message, code: code);
+            return;
+        }
+    }
+
     public void AddIfNullOrWhiteSpace(string? str, string message, int code = DEFAULT_CODE)
         => AddIf(string.IsNullOrWhiteSpace(str), message, code);
 
