@@ -42,11 +42,11 @@ public class Product : Entity
     {
         ResultBuilder<Product> resultBuilder = new();
 
-        resultBuilder.AddIfNullOrWhiteSpace(name, "");
+        resultBuilder.AddIfIsInRange(name, ErrorEnum.InvalidName, minValue: 2, maxValue: 100);
 
-        resultBuilder.AddIfNullOrWhiteSpace(description, "");
+        resultBuilder.AddIfIsInRange(description, ErrorEnum.InvalidDescription, minValue: 0, maxValue: 1000);
 
-        resultBuilder.AddIf()
+        resultBuilder.AddIf(value < 0, ErrorEnum.InvalidValue);
 
         if (resultBuilder.TryFailed(out Result<Product>? result))
             return result;

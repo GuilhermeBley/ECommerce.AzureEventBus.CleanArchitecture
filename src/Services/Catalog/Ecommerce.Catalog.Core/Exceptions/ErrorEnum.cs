@@ -3,5 +3,6 @@
 public enum ErrorEnum
 {
     InvalidDescription = 400,
-    InvalidName = 400
+    InvalidName = 400,
+    InvalidValue = 400
 }
