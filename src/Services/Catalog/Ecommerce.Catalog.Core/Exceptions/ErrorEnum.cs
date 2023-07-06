@@ -8,5 +8,7 @@ public enum ErrorEnum
     InvalidEmail = 400,
     InvalidNickName = 400,
     InvalidPassword = 400,
-    InvalidPhoneNumber = 400
+    InvalidPhoneNumber = 400,
+    InvalidClaimType = 400,
+    InvalidClaimValue = 400,
 }
