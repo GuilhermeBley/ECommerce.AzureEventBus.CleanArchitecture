@@ -17,7 +17,7 @@ public class ResultBase
     /// </summary>
     public IReadOnlyCollection<ICoreError> Errors { get; }
 
-    protected ResultBase(IEnumerable<ICoreError> errors)
+    internal ResultBase(IEnumerable<ICoreError> errors)
     {
         Errors = errors.ToList().AsReadOnly();
         IsSuccess = Errors.Any();
