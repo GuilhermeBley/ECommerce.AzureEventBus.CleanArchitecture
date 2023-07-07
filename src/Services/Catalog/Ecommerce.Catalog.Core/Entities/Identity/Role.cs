@@ -2,5 +2,5 @@
 
 public class Role : ClaimEntity
 {
-
+    public Guid Id { get; set; }
 }

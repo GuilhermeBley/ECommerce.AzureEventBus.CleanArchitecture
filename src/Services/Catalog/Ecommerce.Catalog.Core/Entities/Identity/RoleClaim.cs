@@ -2,10 +2,10 @@
 
 internal class RoleClaim : ClaimEntity
 {
-    public int IdClaim { get; private set; }
-    public int IdRole { get; private set; }
+    public Guid IdClaim { get; private set; }
+    public Guid IdRole { get; private set; }
 
-    private RoleClaim(int idClaim, int idRole, string claimType, string claimValue)
+    private RoleClaim(Guid idClaim, Guid idRole, string claimType, string claimValue)
     {
         IdClaim = idClaim;
         IdRole = idRole;
@@ -28,19 +28,11 @@ internal class RoleClaim : ClaimEntity
         return HashCode.Combine(IdEntity, ClaimType, ClaimValue, IdClaim, IdRole);
     }
 
-    public static Result<RoleClaim> Create(int idClaim, int idRole, string claimType, string claimValue)
+    public static Result<RoleClaim> Create(Guid idClaim, Guid idRole, string claimType, string claimValue)
     {
         var claimsResult = CheckClaim(claimType, claimValue);
 
         ResultBuilder<RoleClaim> resultBuilder = new(claimsResult);
-
-        resultBuilder.AddIf(
-            idClaim < 0, ErrorEnum.InvalidIdClaim
-        );
-
-        resultBuilder.AddIf(
-            idRole < 0, ErrorEnum.InvalidIdRole
-        );
 
         if (resultBuilder.TryFailed(out Result<RoleClaim>? result))
             return result;
