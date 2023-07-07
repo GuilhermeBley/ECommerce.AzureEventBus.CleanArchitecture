@@ -8,8 +8,13 @@ public sealed class ResultBuilder<TResult> : ResultBuilder
     {
     }
 
-    public ResultBuilder(ResultBuilder<TResult> resultBuilder)
+    public ResultBuilder(ResultBuilder resultBuilder)
         : base(resultBuilder)
+    {
+    }
+
+    public ResultBuilder(ResultBase resultBase)
+        : base(resultBase.Errors)
     {
     }
 

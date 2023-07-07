@@ -1,5 +1,6 @@
 ﻿namespace Ecommerce.Catalog.Core.Entities.Identity;
 
-public class Role
+public class Role : ClaimEntity
 {
+
 }
