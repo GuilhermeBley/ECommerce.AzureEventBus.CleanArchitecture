@@ -4,7 +4,7 @@ public class Role
 {
     public const string ALLOWED_NAME_VALUE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
 
-    public Guid Id { get; set; }
+    public Guid Id { get; private set; }
     public string Name { get; private set; }
     public string NormalizedName { get; private set; }
 
