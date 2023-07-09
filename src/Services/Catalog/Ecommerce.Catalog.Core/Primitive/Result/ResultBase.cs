@@ -22,4 +22,13 @@ public class ResultBase
         Errors = errors.ToList().AsReadOnly();
         IsSuccess = Errors.Any();
     }
+
+    /// <summary>
+    /// Concat errors
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    public ResultBase ConcatErrors(ResultBase other)
+        => !this.Errors.Any() && !other.Errors.Any()
+        ? throw new InvalidOperationException("This or other doesn't contain errors.")
+        : new ResultBase(this.Errors.Concat(other.Errors));
 }

@@ -2,13 +2,16 @@
 
 public class User
 {
+    public const string ALLOWED_PASSWORD 
+        = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 " + "!@#$%¨&*()_+-=";
+
     public Guid Id { get; private set; }
     public string Email { get; private set; }
     public string Name { get; private set; }
     public string? NickName { get; private set; }
     public string PasswordHash { get; private set; }
     public string PasswordSalt { get; private set; }
-    public bool EmailConfirmed { get;private set; }
+    public bool EmailConfirmed { get; private set; }
 
     /// <summary>
     /// Phone number
@@ -95,18 +98,58 @@ public class User
     }
 
     public static Result<User> Create(
-        Guid id, 
-        string email, 
-        string name, 
-        string? nickName, 
-        string passwordHash, 
-        string passwordSalt, 
-        string? phoneNumber, 
+        Guid id,
+        string email,
+        string name,
+        string? nickName,
+        string password,
+        string? phoneNumber,
         bool twoFactoryEnabled = false,
         bool lockOutEnabled = true,
         bool phoneNumberConfirmed = false,
         bool emailConfirmed = false,
-        DateTime ? lockOutEnd = null, 
+        DateTime? lockOutEnd = null,
+        int accessFailedCount = 0)
+    {
+        var passwordResult = IsValidPassword(password);
+
+        var hashedPassword = Security.HashConvert.CreateHashedPassword(password);
+
+        var result = Create(
+            id: id,
+            email: email,
+            name: name,
+            nickName: nickName,
+            passwordHash: hashedPassword.HashBase64,
+            passwordSalt: hashedPassword.Salt,
+            phoneNumber: phoneNumber,
+            twoFactoryEnabled: twoFactoryEnabled,
+            lockOutEnabled: lockOutEnabled,
+            phoneNumberConfirmed: phoneNumberConfirmed,
+            emailConfirmed: emailConfirmed,
+            lockOutEnd: lockOutEnd,
+            accessFailedCount: accessFailedCount
+        );
+
+        if (result.IsFailure || passwordResult.IsFailure)
+            return result.ConcatErrors(passwordResult);
+
+        return result;
+    }
+
+    public static Result<User> Create(
+        Guid id,
+        string email,
+        string name,
+        string? nickName,
+        string passwordHash,
+        string passwordSalt,
+        string? phoneNumber,
+        bool twoFactoryEnabled = false,
+        bool lockOutEnabled = true,
+        bool phoneNumberConfirmed = false,
+        bool emailConfirmed = false,
+        DateTime? lockOutEnd = null,
         int accessFailedCount = 0)
     {
         ResultBuilder<User> resultBuilder = new();
@@ -118,24 +161,35 @@ public class User
         resultBuilder.AddIfIsInRange(name, ErrorEnum.InvalidName, minValue: 3, maxValue: 255);
 
         resultBuilder.AddIf(
-            phoneNumber is null ? 
-                false 
-                : phoneNumber.All(char.IsNumber) && phoneNumber.Length > 5 && phoneNumber.Length < 15, 
+            phoneNumber is null ?
+                false
+                : phoneNumber.All(char.IsNumber) && phoneNumber.Length > 5 && phoneNumber.Length < 15,
             ErrorEnum.InvalidPhoneNumber);
-
-        resultBuilder.AddIf(
-            passwordHash is null || passwordSalt is null,
-            ErrorEnum.InvalidPassword);
 
         if (resultBuilder.TryFailed(out Result<User>? result))
             return result;
 
         return resultBuilder.Success(
-            new User(id: id, email: email, name: name, nickName: nickName, 
+            new User(id: id, email: email, name: name, nickName: nickName,
             passwordHash: passwordHash ?? string.Empty, passwordSalt: passwordSalt ?? string.Empty,
-            emailConfirmed: emailConfirmed, phoneNumber: phoneNumber, 
+            emailConfirmed: emailConfirmed, phoneNumber: phoneNumber,
             phoneNumberConfirmed: phoneNumberConfirmed, twoFactoryEnabled: twoFactoryEnabled,
             lockOutEnd: lockOutEnd, lockOutEnabled: lockOutEnabled, accessFailedCount: accessFailedCount)
         );
+    }
+
+    public static ResultBase IsValidPassword(string password)
+    {
+        ResultBuilder resultBuilder = new();
+
+        resultBuilder.AddIf(
+            string.IsNullOrWhiteSpace(password) ||
+            password.Any(c => !ALLOWED_PASSWORD.Contains(c)) ||
+            password.Any(c => !char.IsLetter(c)) ||
+            password.Any(c => !char.IsDigit(c)),
+            ErrorEnum.InvalidPassword
+        );
+
+        return resultBuilder.GetResult();
     }
 }
