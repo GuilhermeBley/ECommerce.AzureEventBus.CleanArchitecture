@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Catalog.Applicati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Catalog.Core", "src\Services\Catalog\Ecommerce.Catalog.Core\Ecommerce.Catalog.Core.csproj", "{F852D9E8-7E51-437C-BB6E-2191C3CBC919}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ECommerce.EventBus", "src\BuildingBlocks\EventBus\ECommerce.EventBus\ECommerce.EventBus.csproj", "{B76C7BD0-D5CA-4A94-AE07-6B0DE6594728}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.EventBus", "src\BuildingBlocks\EventBus\Ecommerce.EventBus\Ecommerce.EventBus.csproj", "{B76C7BD0-D5CA-4A94-AE07-6B0DE6594728}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

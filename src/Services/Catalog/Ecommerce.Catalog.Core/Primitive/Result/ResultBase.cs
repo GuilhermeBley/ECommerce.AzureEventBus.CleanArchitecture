@@ -1,4 +1,4 @@
-namespace ECommerce.Catalog.Core.Primitive.Result;
+namespace Ecommerce.Catalog.Core.Primitive.Result;
 
 public class ResultBase
 {

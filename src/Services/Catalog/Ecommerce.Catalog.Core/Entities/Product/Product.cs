@@ -1,4 +1,4 @@
-﻿using ECommerce.Catalog.Core.Primitive.Result;
+﻿using Ecommerce.Catalog.Core.Primitive.Result;
 
 namespace Ecommerce.Catalog.Core.Entities.Product;
 

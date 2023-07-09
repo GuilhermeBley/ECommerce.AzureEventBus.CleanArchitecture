@@ -1,4 +1,4 @@
-﻿namespace ECommerce.EventBus;
+﻿namespace Ecommerce.EventBus;
 public class Class1
 {
 

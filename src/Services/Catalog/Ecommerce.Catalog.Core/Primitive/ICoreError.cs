@@ -1,4 +1,4 @@
-namespace ECommerce.Catalog.Core.Primitive;
+namespace Ecommerce.Catalog.Core.Primitive;
 
 public interface ICoreError
 {
