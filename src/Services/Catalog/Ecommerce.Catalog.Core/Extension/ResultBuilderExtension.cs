@@ -1,7 +1,4 @@
-﻿using Ecommerce.Catalog.Core.Exceptions;
-using Ecommerce.Catalog.Core.Primitive.Result;
-
-namespace Ecommerce.Catalog.Core.Extension;
+﻿namespace Ecommerce.Catalog.Core.Extension;
 
 public static class ResultBuilderExtension
 {
@@ -30,4 +27,10 @@ public static class ResultBuilderExtension
 
     public static void AddIf(this ResultBuilder resultBuilder, bool condition, ErrorEnum @enum)
         => resultBuilder.AddIf(condition, @enum.ToString(), (int)@enum);
+
+    public static ResultBase CreateFailed(ErrorEnum @enum)
+        => ResultBuilder.CreateFailed(@enum.ToString(), (int)@enum);
+
+    public static Result<T> CreateFailed<T>(ErrorEnum @enum)
+        => ResultBuilder<T>.CreateFailed(@enum.ToString(), (int)@enum);
 }

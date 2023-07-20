@@ -16,10 +16,10 @@ public class Result<TResult> : ResultBase
     public static Result<TResult> Success(TResult value)
         => new(value, Enumerable.Empty<ICoreError>());
 
-    public static Result<TResult> Failed(ICoreError error)
+    public new static Result<TResult> Failed(ICoreError error)
         => new(default, new ICoreError[] { error });
         
-    public static Result<TResult> Failed(IEnumerable<ICoreError> errors)
+    public new static Result<TResult> Failed(IEnumerable<ICoreError> errors)
         => new(default, errors);
 
     public bool TryGetValue([NotNullWhen(true)] out TResult? value)

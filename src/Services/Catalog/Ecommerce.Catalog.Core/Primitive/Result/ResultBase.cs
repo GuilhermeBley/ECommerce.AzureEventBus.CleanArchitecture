@@ -23,6 +23,15 @@ public class ResultBase
         IsSuccess = Errors.Any();
     }
 
+    public static ResultBase Failed(ICoreError error)
+        => new(new ICoreError[] { error });
+
+    public static ResultBase Failed(IEnumerable<ICoreError> errors)
+        => new(errors);
+
+    public static ResultBase Success()
+        => new(Array.Empty<ICoreError>());
+
     /// <summary>
     /// Concat errors
     /// </summary>

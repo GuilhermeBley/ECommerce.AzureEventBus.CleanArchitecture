@@ -2,6 +2,8 @@
 
 public enum ErrorEnum
 {
+    Unauthorized = 401,
+    Forbbiden = 403,
     InvalidDescription = 400,
     InvalidName = 400,
     InvalidValue = 400,
