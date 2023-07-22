@@ -2,13 +2,13 @@
 
 internal class RoleClaim : ClaimEntity
 {
-    public Guid IdClaim { get; private set; }
-    public Guid IdRole { get; private set; }
+    public Guid ClaimId { get; private set; }
+    public Guid RoleId { get; private set; }
 
-    private RoleClaim(Guid idClaim, Guid idRole, string claimType, string claimValue)
+    private RoleClaim(Guid claimId, Guid roleId, string claimType, string claimValue)
     {
-        IdClaim = idClaim;
-        IdRole = idRole;
+        ClaimId = claimId;
+        RoleId = roleId;
         ClaimType = claimType;
         ClaimValue = claimValue;
     }
@@ -19,16 +19,16 @@ internal class RoleClaim : ClaimEntity
                IdEntity.Equals(claim.IdEntity) &&
                ClaimType == claim.ClaimType &&
                ClaimValue == claim.ClaimValue &&
-               IdClaim == claim.IdClaim &&
-               IdRole == claim.IdRole;
+               ClaimId == claim.ClaimId &&
+               RoleId == claim.RoleId;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(IdEntity, ClaimType, ClaimValue, IdClaim, IdRole);
+        return HashCode.Combine(IdEntity, ClaimType, ClaimValue, ClaimId, RoleId);
     }
 
-    public static Result<RoleClaim> Create(Guid idClaim, Guid idRole, string claimType, string claimValue)
+    public static Result<RoleClaim> Create(Guid claimId, Guid roleId, string claimType, string claimValue)
     {
         var claimsResult = CheckClaim(claimType, claimValue);
 
@@ -38,7 +38,7 @@ internal class RoleClaim : ClaimEntity
             return result;
 
         return resultBuilder.Success(
-            new RoleClaim(idClaim, idRole, claimType, claimValue)    
+            new RoleClaim(claimId, roleId, claimType, claimValue)    
         );
     }
 }

@@ -3,12 +3,12 @@
 public class UserClaim : ClaimEntity
 {
     public Guid Id { get; set; }
-    public Guid IdUser { get; set; }
+    public Guid UserId { get; set; }
 
-    private UserClaim(Guid id, Guid idUser, string claimType, string claimValue)
+    private UserClaim(Guid id, Guid userId, string claimType, string claimValue)
     {
         Id = id;
-        IdUser = idUser;
+        UserId = userId;
         ClaimType = claimType;
         ClaimValue = claimValue;
     }
@@ -20,15 +20,15 @@ public class UserClaim : ClaimEntity
                ClaimType == claim.ClaimType &&
                ClaimValue == claim.ClaimValue &&
                Id.Equals(claim.Id) &&
-               IdUser.Equals(claim.IdUser);
+               UserId.Equals(claim.UserId);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(IdEntity, ClaimType, ClaimValue, Id, IdUser);
+        return HashCode.Combine(IdEntity, ClaimType, ClaimValue, Id, UserId);
     }
 
-    public static Result<UserClaim> Create(Guid id, Guid idUser, string claimType, string claimValue)
+    public static Result<UserClaim> Create(Guid id, Guid userId, string claimType, string claimValue)
     {
         var resultClaim = CheckClaim(claimType, claimValue);
 
@@ -38,7 +38,7 @@ public class UserClaim : ClaimEntity
             return result;
 
         return resultBuilder.Success(
-            new UserClaim(id, idUser, claimType, claimValue)
+            new UserClaim(id, userId, claimType, claimValue)
         );
     }
 }
