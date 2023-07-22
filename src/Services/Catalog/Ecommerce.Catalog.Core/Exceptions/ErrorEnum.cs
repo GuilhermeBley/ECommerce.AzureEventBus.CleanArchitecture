@@ -16,4 +16,7 @@ public enum ErrorEnum
     InvalidIdClaim = 400,
     InvalidIdRole = 400,
     InvalidRoleName = 400,
+    InvalidCompanyName = 400,
+    InvalidCompanyUpdateAt = 400,
+    InvalidCompanyCreatedAt = 400,
 }

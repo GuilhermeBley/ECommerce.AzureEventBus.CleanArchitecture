@@ -1,6 +1,6 @@
 ﻿namespace Ecommerce.Catalog.Core.Entities.Identity;
 
-public class RoleUserClaim
+public class RoleUserClaim : Entity
 {
     public Guid Id { get; private set; }
     public Guid UserId { get; private set; }
