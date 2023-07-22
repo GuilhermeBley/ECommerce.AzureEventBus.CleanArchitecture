@@ -2,8 +2,8 @@
 
 public class UserClaim : ClaimEntity
 {
-    public Guid Id { get; set; }
-    public Guid UserId { get; set; }
+    public Guid Id { get; private set; }
+    public Guid UserId { get; private set; }
 
     private UserClaim(Guid id, Guid userId, string claimType, string claimValue)
     {
