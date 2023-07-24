@@ -7,10 +7,10 @@ namespace Ecommerce.Catalog.Application.Commands.Product.CreateProduct;
 
 public class CreateProductHandler : IAppRequestHandler<CreateProductRequest, Result<CreateProductResponse>>
 {
-    private readonly ICatalogContext _catalogContext;
+    private readonly CatalogContext _catalogContext;
     private readonly ClaimsPrincipal _principal;
 
-    public CreateProductHandler(ClaimsPrincipal principal, ICatalogContext catalogContext)
+    public CreateProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext)
     {
         _catalogContext = catalogContext;
         _principal = principal;
