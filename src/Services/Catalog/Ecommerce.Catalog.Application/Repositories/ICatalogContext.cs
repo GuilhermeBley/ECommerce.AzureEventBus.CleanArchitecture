@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Catalog.Application.Model.Identity;
+using Ecommerce.Catalog.Application.Model.Product;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Catalog.Application.Repositories;

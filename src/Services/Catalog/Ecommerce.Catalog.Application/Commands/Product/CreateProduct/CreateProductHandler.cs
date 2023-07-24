@@ -1,4 +1,4 @@
-﻿using Ecommerce.Catalog.Application.Model.Identity;
+﻿using Ecommerce.Catalog.Application.Model.Product;
 using Ecommerce.Catalog.Application.Repositories;
 using System.Security.Claims;
 using System.Security.Principal;

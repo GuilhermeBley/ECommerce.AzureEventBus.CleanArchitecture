@@ -1,4 +1,4 @@
-﻿namespace Ecommerce.Catalog.Application.Model.Identity;
+﻿namespace Ecommerce.Catalog.Application.Model.Product;
 
 public class ProductModel
 {
