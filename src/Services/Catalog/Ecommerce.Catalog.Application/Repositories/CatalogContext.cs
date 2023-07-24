@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Catalog.Application.Repositories;
 
-public abstract class CatalogContext : DbContext
+public class CatalogContext : DbContext
 {
     DbSet<UserModel> Users { get; set; } = null!;
     DbSet<RoleModel> Roles { get; set; } = null!;
