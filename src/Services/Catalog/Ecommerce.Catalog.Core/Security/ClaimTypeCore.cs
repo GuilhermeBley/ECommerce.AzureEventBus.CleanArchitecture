@@ -8,6 +8,7 @@ public static class ClaimTypeCore
     public const string DEFAULT_NAME = ClaimTypes.Name;
     public const string DEFAULT_EMAIL = ClaimTypes.Email;
     public const string DEFAULT_ID = ClaimTypes.NameIdentifier;
+    public const string DEFAULT_COMPANY_ID = "companyid";
 
     public static Claim CreateClaimId(Guid id)
         => CreateClaimId(id.ToString());

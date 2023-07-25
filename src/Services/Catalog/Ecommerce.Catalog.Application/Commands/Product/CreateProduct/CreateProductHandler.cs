@@ -1,5 +1,7 @@
-﻿using Ecommerce.Catalog.Application.Model.Product;
+﻿using Ecommerce.Catalog.Application.Model.Company;
+using Ecommerce.Catalog.Application.Model.Product;
 using Ecommerce.Catalog.Application.Repositories;
+using Ecommerce.Catalog.Core.Entities.Company;
 using System.Security.Claims;
 using System.Security.Principal;
 
@@ -20,7 +22,14 @@ public class CreateProductHandler : IAppRequestHandler<CreateProductRequest, Res
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var result = Core.Entities.Product.Product.Create(
+        var claimCompany = _principal.GetCompany();
+
+        if (!claimCompany.TryGetValue(out Guid companyId))
+            return Result<CreateProductResponse>.Failed(claimCompany.Errors);
+
+        using var transaction = await _catalogContext.Database.BeginTransactionAsync(cancellationToken);
+
+        var resultProduct = Core.Entities.Product.Product.Create(
             id: Guid.NewGuid(),
             name: request.Name,
             description: request.Description,
@@ -29,13 +38,27 @@ public class CreateProductHandler : IAppRequestHandler<CreateProductRequest, Res
             insertAt: DateTime.UtcNow
         );
 
-        if (result.IsFailure ||
-            result.Value is null)
-            return Result<CreateProductResponse>.Failed(result.Errors);
+        if (resultProduct.IsFailure ||
+            resultProduct.Value is null)
+            return Result<CreateProductResponse>.Failed(resultProduct.Errors);
 
-        var productModel = Map(result.Value);
-
+        var productModel = Map(resultProduct.Value);
         await _catalogContext.Products.AddAsync(productModel);
+
+        var resultCompany = Core.Entities.Company.CompanyProduct.CreateDefault(
+            productId: productModel.Id,
+            companyId: companyId
+            );
+
+        if (resultCompany.IsFailure ||
+            resultCompany.Value is null)
+            return Result<CreateProductResponse>.Failed(resultCompany.Errors);
+
+        var companyModel = Map(resultCompany.Value);
+        await _catalogContext.CompanyProducts.AddAsync(companyModel);
+
+        await _catalogContext.SaveChangesAsync();
+        await transaction.CommitAsync();
 
         return Result<CreateProductResponse>.Success(
             new CreateProductResponse
@@ -59,5 +82,14 @@ public class CreateProductHandler : IAppRequestHandler<CreateProductRequest, Res
             InsertAt = entity.InsertAt,
             UpdateAt = entity.UpdateAt,
             Value = entity.Value
+        };
+
+    public CompanyProductModel Map(Core.Entities.Company.CompanyProduct createProductResponse)
+        => new CompanyProductModel
+        {
+            CompanyId = createProductResponse.CompanyId,
+            CreateAt = createProductResponse.CreateAt,
+            Id = createProductResponse.Id,
+            ProductId = createProductResponse.ProductId
         };
 }

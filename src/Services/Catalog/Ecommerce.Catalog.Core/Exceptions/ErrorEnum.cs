@@ -19,4 +19,5 @@ public enum ErrorEnum
     InvalidCompanyName = 400,
     InvalidCompanyUpdateAt = 400,
     InvalidCompanyCreatedAt = 400,
+    InvalidCreateAtCompanyProduct = 400,
 }
