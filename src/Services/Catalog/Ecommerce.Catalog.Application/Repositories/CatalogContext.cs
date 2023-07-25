@@ -1,4 +1,5 @@
-﻿using Ecommerce.Catalog.Application.Model.Identity;
+﻿using Ecommerce.Catalog.Application.Model.Company;
+using Ecommerce.Catalog.Application.Model.Identity;
 using Ecommerce.Catalog.Application.Model.Product;
 using Ecommerce.Catalog.Core.Entities.Company;
 using Microsoft.EntityFrameworkCore;
@@ -7,13 +8,13 @@ namespace Ecommerce.Catalog.Application.Repositories;
 
 public class CatalogContext : DbContext
 {
-    DbSet<UserModel> Users { get; set; } = null!;
-    DbSet<RoleModel> Roles { get; set; } = null!;
-    DbSet<RoleClaimModel> RoleClaims { get; set; } = null!;
-    DbSet<UserClaimModel> UserClaims { get; set; } = null!;
-    DbSet<RoleUserClaimModel> RoleUsersClaims { get; set; } = null!;
-    DbSet<ProductModel> Products { get; set; } = null!;
-
-    DbSet<Company> Companies { get; } = null!;
-    DbSet<CompanyUserClaim> CompanyUsersClaims { get; } = null!;
+    public DbSet<UserModel> Users { get; set; } = null!;
+    public DbSet<RoleModel> Roles { get; set; } = null!;
+    public DbSet<RoleClaimModel> RoleClaims { get; set; } = null!;
+    public DbSet<UserClaimModel> UserClaims { get; set; } = null!;
+    public DbSet<RoleUserClaimModel> RoleUsersClaims { get; set; } = null!;
+    public DbSet<ProductModel> Products { get; set; } = null!;
+    public DbSet<Company> Companies { get; } = null!;
+    public DbSet<CompanyUserClaim> CompanyUsersClaims { get; } = null!;
+    public DbSet<CompanyProductModel> CompanyProducts { get; } = null!;
 }
