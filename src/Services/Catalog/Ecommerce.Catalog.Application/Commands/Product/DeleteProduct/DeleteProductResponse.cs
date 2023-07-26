@@ -1,0 +1,11 @@
+﻿namespace Ecommerce.Catalog.Application.Commands.Product.DeleteProduct;
+
+public class DeleteProductResponse
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public double Value { get; set; }
+    public DateTime UpdateAt { get; set; }
+    public DateTime InsertAt { get; set; }
+}

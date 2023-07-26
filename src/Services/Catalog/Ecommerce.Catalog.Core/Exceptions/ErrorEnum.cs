@@ -20,4 +20,5 @@ public enum ErrorEnum
     InvalidCompanyUpdateAt = 400,
     InvalidCompanyCreatedAt = 400,
     InvalidCreateAtCompanyProduct = 400,
+    ProductNotFound = 404
 }
