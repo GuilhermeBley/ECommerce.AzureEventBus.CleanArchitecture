@@ -13,7 +13,7 @@ public class Result<TResult> : ResultBase
         _value = value;
     }
 
-    public static Result<TResult> Success(TResult value)
+    public static Result<TResult> Success(TResult? value)
         => new(value, Enumerable.Empty<ICoreError>());
 
     public new static Result<TResult> Failed(ICoreError error)

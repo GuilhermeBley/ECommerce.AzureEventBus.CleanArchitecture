@@ -70,8 +70,8 @@ public sealed class ResultBuilder<TResult> : ResultBuilder
     public static new Result<TResult> CreateFailed(string message, int code = DEFAULT_CODE)
         => Result<TResult>.Failed(new Error(code, message));
 
-    public static Result<TResult> CreateSuccess(TResult result)
-        => Result<TResult>.Success(result ?? throw new ArgumentNullException("result"));
+    public static Result<TResult> CreateSuccess(TResult? result)
+        => Result<TResult>.Success(result);
 }
 
 public class ResultBuilder
