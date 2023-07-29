@@ -178,7 +178,7 @@ public class User
         );
     }
 
-    public static ResultBase IsValidPassword(string password)
+    public static Result IsValidPassword(string password)
     {
         ResultBuilder resultBuilder = new();
 

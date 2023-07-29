@@ -28,7 +28,7 @@ public static class ResultBuilderExtension
     public static void AddIf(this ResultBuilder resultBuilder, bool condition, ErrorEnum @enum)
         => resultBuilder.AddIf(condition, @enum.ToString(), (int)@enum);
 
-    public static ResultBase CreateFailed(ErrorEnum @enum)
+    public static Result CreateFailed(ErrorEnum @enum)
         => ResultBuilder.CreateFailed(@enum.ToString(), (int)@enum);
 
     public static Result<T> CreateFailed<T>(ErrorEnum @enum)

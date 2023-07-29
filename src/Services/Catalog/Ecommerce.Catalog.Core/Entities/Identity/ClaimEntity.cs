@@ -9,7 +9,7 @@ public class ClaimEntity : Entity
     public string ClaimType { get; internal protected set; } = string.Empty;
     public string ClaimValue { get; internal protected set; } = string.Empty;
 
-    public static ResultBase CheckClaim(string? type, string? value)
+    public static Result CheckClaim(string? type, string? value)
     {
         ResultBuilder resultBuilder = new();
 

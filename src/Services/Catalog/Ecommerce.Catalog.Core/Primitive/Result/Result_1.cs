@@ -1,6 +1,6 @@
 namespace Ecommerce.Catalog.Core.Primitive.Result;
 
-public class ResultBase
+public class Result
 {
     /// <summary>
     /// Gets a value indicating whether the result is a success result.
@@ -17,27 +17,29 @@ public class ResultBase
     /// </summary>
     public IReadOnlyCollection<ICoreError> Errors { get; }
 
-    internal ResultBase(IEnumerable<ICoreError> errors)
+    internal Result(IEnumerable<ICoreError> errors)
     {
         Errors = errors.ToList().AsReadOnly();
         IsSuccess = Errors.Any();
     }
 
-    public static ResultBase Failed(ICoreError error)
+    public static Result Failed(ICoreError error)
         => new(new ICoreError[] { error });
 
-    public static ResultBase Failed(IEnumerable<ICoreError> errors)
+    public static Result Failed(IEnumerable<ICoreError> errors)
         => new(errors);
 
-    public static ResultBase Success()
+    public static Result Success()
         => new(Array.Empty<ICoreError>());
+    public static Result<T> Success<T>(T? item)
+        => Result<T>.Success(item);
 
     /// <summary>
     /// Concat errors
     /// </summary>
     /// <exception cref="InvalidOperationException"></exception>
-    public ResultBase ConcatErrors(ResultBase other)
+    public Result ConcatErrors(Result other)
         => !this.Errors.Any() && !other.Errors.Any()
         ? throw new InvalidOperationException("This or other doesn't contain errors.")
-        : new ResultBase(this.Errors.Concat(other.Errors));
+        : new Result(this.Errors.Concat(other.Errors));
 }

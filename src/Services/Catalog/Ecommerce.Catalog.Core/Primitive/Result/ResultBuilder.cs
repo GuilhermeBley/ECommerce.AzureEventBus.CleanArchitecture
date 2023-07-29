@@ -13,7 +13,7 @@ public sealed class ResultBuilder<TResult> : ResultBuilder
     {
     }
 
-    public ResultBuilder(ResultBase resultBase)
+    public ResultBuilder(Result resultBase)
         : base(resultBase.Errors)
     {
     }
@@ -140,14 +140,14 @@ public class ResultBuilder
     public void AddRange(params (string Message, int Code)[] values)
         => _errors.AddRange(values.Select(value => new Error(value.Code, value.Message)));
 
-    public ResultBase GetResult()
-        => new ResultBase(_errors);
+    public Result GetResult()
+        => new Result(_errors);
 
-    public static ResultBase CreateFailed(string message, int code = DEFAULT_CODE)
-        => new ResultBase(new ICoreError[] { new Error(code, message) });
+    public static Result CreateFailed(string message, int code = DEFAULT_CODE)
+        => new Result(new ICoreError[] { new Error(code, message) });
 
-    public static ResultBase CreateSuccess()
-        => new ResultBase(Enumerable.Empty<ICoreError>());
+    public static Result CreateSuccess()
+        => new Result(Enumerable.Empty<ICoreError>());
 
     internal protected record Error(int Code, string Message) : ICoreError;
 }

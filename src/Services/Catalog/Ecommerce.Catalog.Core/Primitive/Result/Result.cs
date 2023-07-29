@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Ecommerce.Catalog.Core.Primitive.Result;
 
-public class Result<TResult> : ResultBase
+public class Result<TResult> : Result
 {
     private readonly TResult? _value;
     public TResult? Value => _value;
@@ -37,7 +37,7 @@ public class Result<TResult> : ResultBase
     /// Concat errors
     /// </summary>
     /// <exception cref="InvalidOperationException"></exception>
-    public new Result<TResult> ConcatErrors(ResultBase other)
+    public new Result<TResult> ConcatErrors(Result other)
         => !this.Errors.Any() && !other.Errors.Any()
         ? throw new InvalidOperationException("This or other doesn't contain errors.")
         : new Result<TResult>(default, this.Errors.Concat(other.Errors));

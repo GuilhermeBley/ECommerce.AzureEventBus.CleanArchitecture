@@ -26,7 +26,7 @@ internal static class ClaimPrincipalExtension
         return ResultBuilder<Guid>.CreateSuccess(resultGuid);
     }
 
-    public static ResultBase ContainsRole(this ClaimsPrincipal claimsPrincipal, string roleValue)
+    public static Result ContainsRole(this ClaimsPrincipal claimsPrincipal, string roleValue)
     {
         if (IsLogged(claimsPrincipal).IsFailure)
             return ResultBuilderExtension.CreateFailed(ErrorEnum.Unauthorized);
@@ -52,10 +52,10 @@ internal static class ClaimPrincipalExtension
         return ResultBuilder<string>.CreateSuccess(claimFound.Value);
     }
 
-    public static ResultBase IsLogged(this ClaimsPrincipal claimsPrincipal)
+    public static Result IsLogged(this ClaimsPrincipal claimsPrincipal)
     {
         if (claimsPrincipal.HasClaim(c => c.Type == ClaimTypeCore.DEFAULT_ID))
-            return ResultBase.Success();
+            return Result.Success();
 
         return ResultBuilderExtension.CreateFailed(ErrorEnum.Unauthorized); 
     }
