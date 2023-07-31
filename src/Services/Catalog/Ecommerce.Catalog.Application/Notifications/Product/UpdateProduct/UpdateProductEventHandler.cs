@@ -1,6 +1,6 @@
 ﻿namespace Ecommerce.Catalog.Application.Notifications.Product.UpdateProduct
 {
-    internal class UpdateProductEventHandler : IAppNotificationHandler<UpdateProductNotification>
+    public class UpdateProductEventHandler : IAppNotificationHandler<UpdateProductNotification>
     {
         private readonly IEventBus _eventBus;
 
