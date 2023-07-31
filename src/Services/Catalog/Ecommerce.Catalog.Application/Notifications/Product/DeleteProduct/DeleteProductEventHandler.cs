@@ -2,8 +2,26 @@
 
 public class DeleteProductEventHandler : IAppNotificationHandler<DeleteProductNotification>
 {
-    public Task Handle(DeleteProductNotification notification, CancellationToken cancellationToken)
+    private readonly IEventBus _eventBus;
+
+    public DeleteProductEventHandler(IEventBus eventBus)
     {
-        throw new NotImplementedException();
+        _eventBus = eventBus;
+    }
+
+    public async Task Handle(DeleteProductNotification notification, CancellationToken cancellationToken)
+        =>  await _eventBus.PublishAsync(
+            new DeleteProductNotificationIntegrationEvent
+            {
+                Id = notification.Id,
+                Name = notification.Name,
+                Value = notification.Value,
+            });
+
+    private class DeleteProductNotificationIntegrationEvent : IntegrationEvent
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public double Value { get; set; }
     }
 }
