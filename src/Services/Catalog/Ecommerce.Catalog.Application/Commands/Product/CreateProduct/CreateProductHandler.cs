@@ -1,20 +1,21 @@
 ﻿using Ecommerce.Catalog.Application.Model.Company;
 using Ecommerce.Catalog.Application.Model.Product;
+using Ecommerce.Catalog.Application.Notifications.Product.CreateProduct;
 using Ecommerce.Catalog.Application.Repositories;
-using Ecommerce.Catalog.Core.Entities.Company;
 using System.Security.Claims;
-using System.Security.Principal;
 
 namespace Ecommerce.Catalog.Application.Commands.Product.CreateProduct;
 
 public class CreateProductHandler : IAppRequestHandler<CreateProductRequest, Result<CreateProductResponse>>
 {
+    private readonly IAppMediator _appMediator;
     private readonly CatalogContext _catalogContext;
     private readonly ClaimsPrincipal _principal;
 
-    public CreateProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext)
+    public CreateProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext, IAppMediator appMediator)
     {
         _catalogContext = catalogContext;
+        _appMediator = appMediator;
         _principal = principal;
     }
 
@@ -56,6 +57,8 @@ public class CreateProductHandler : IAppRequestHandler<CreateProductRequest, Res
 
         var companyModel = Map(resultCompany.Value);
         await _catalogContext.CompanyProducts.AddAsync(companyModel);
+
+        await _appMediator.Publish(new CreateProductNotification { Id = productModel.Id });
 
         await _catalogContext.SaveChangesAsync();
         await transaction.CommitAsync();

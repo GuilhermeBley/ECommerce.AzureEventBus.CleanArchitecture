@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Catalog.Application.Commands.Product.CreateProduct;
+using Ecommerce.Catalog.Application.Notifications.Product.DeleteProduct;
 using Ecommerce.Catalog.Application.Repositories;
 using Ecommerce.Catalog.Core.Extension;
 using Microsoft.EntityFrameworkCore;
@@ -8,11 +9,13 @@ namespace Ecommerce.Catalog.Application.Commands.Product.DeleteProduct;
 
 public class DeleteProductHandler : IAppRequestHandler<DeleteProductRequest, Result<DeleteProductResponse>>
 {
+    private readonly IAppMediator _mediator;
     private readonly CatalogContext _catalogContext;
     private readonly ClaimsPrincipal _principal;
 
-    public DeleteProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext)
+    public DeleteProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext, IAppMediator mediator)
     {
+        _mediator = mediator;
         _catalogContext = catalogContext;
         _principal = principal;
     }
@@ -42,6 +45,13 @@ public class DeleteProductHandler : IAppRequestHandler<DeleteProductRequest, Res
                 .CreateFailed<DeleteProductResponse>(Core.Exceptions.ErrorEnum.ProductNotFound);
 
         _catalogContext.Products.Remove(product);
+
+        await _mediator.Publish(new DeleteProductNotification
+        { 
+            Id = product.Id,
+            Name = product.Name,
+            Value = product.Value,
+        });
 
         await transaction.CommitAsync();
         await _catalogContext.SaveChangesAsync();

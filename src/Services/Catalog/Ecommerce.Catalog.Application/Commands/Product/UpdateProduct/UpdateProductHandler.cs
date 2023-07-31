@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Catalog.Application.Commands.Product.CreateProduct;
 using Ecommerce.Catalog.Application.Commands.Product.DeleteProduct;
+using Ecommerce.Catalog.Application.Notifications.Product.UpdateProduct;
 using Ecommerce.Catalog.Application.Repositories;
 using Ecommerce.Catalog.Core.Entities.Product;
 using Ecommerce.Catalog.Core.Extension;
@@ -10,11 +11,13 @@ namespace Ecommerce.Catalog.Application.Commands.Product.UpdateProduct;
 
 public class UpdateProductHandler : IAppRequestHandler<UpdateProductRequest, Result<UpdateProductResponse>>
 {
+    private readonly IAppMediator _mediator;
     private readonly CatalogContext _catalogContext;
     private readonly ClaimsPrincipal _principal;
 
-    public UpdateProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext)
+    public UpdateProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext, IAppMediator mediator)
     {
+        _mediator = mediator;
         _catalogContext = catalogContext;
         _principal = principal;
     }
@@ -59,6 +62,12 @@ public class UpdateProductHandler : IAppRequestHandler<UpdateProductRequest, Res
         productToUpdate.UpdateAt = resultEntityProduct.Value.UpdateAt;
         productToUpdate.Description = resultEntityProduct.Value.Description;
         productToUpdate.Name = resultEntityProduct.Value.Name;
+
+        await _mediator.Publish(
+            new UpdateProductNotification
+            {
+                Id = productToUpdate.Id,
+            });
 
         await transaction.CommitAsync();
         await _catalogContext.SaveChangesAsync();
