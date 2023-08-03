@@ -11,5 +11,3 @@ internal class RequestAdapter<TRequest, TResponse> : IRequest<TResponse>
 
     public TRequest Value { get; }
 }
-
-}
