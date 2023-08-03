@@ -1,8 +1,6 @@
 ﻿using Ecommerce.Catalog.Infrastructure.Model.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using static System.Collections.Specialized.BitVector32;
 
 namespace Ecommerce.Catalog.Infrastructure.PostgreSql;
 
@@ -38,6 +36,26 @@ internal class PostgreContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<RoleClaimDbModel>(builder =>
+        {
+
+        });
+
+        modelBuilder.Entity<RoleDbModel>(builder =>
+        {
+
+        });
+
+        modelBuilder.Entity<RoleUserClaimDbModel>(builder =>
+        {
+
+        });
+
+        modelBuilder.Entity<UserClaimDbModel>(builder =>
+        {
+
+        });
+
+        modelBuilder.Entity<UserDbModel>(builder =>
         {
 
         });
