@@ -17,6 +17,8 @@ internal class PostgreContext : DbContext
     public DbSet<Model.Company.CompanyProductDbModel> CompanyProducts { get; set; } = null!;
     public DbSet<Model.Company.CompanyUserClaimDbModel> CompanyUserClaims { get; set; } = null!;
 
+    public DbSet<Model.Product.ProductDbModel> Products { get; set; } = null!;
+
     public PostgreContext(IConfigurationSection section)
     {
         _section = section;
@@ -74,6 +76,11 @@ internal class PostgreContext : DbContext
         });
 
         modelBuilder.Entity<Model.Company.CompanyUserClaimDbModel>(builder =>
+        {
+
+        });
+
+        modelBuilder.Entity < Model.Product.ProductDbModel>(builder =>
         {
 
         });
