@@ -1,5 +1,4 @@
-﻿using Ecommerce.Catalog.Infrastructure.Model.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Ecommerce.Catalog.Infrastructure.PostgreSql;
@@ -8,11 +7,15 @@ internal class PostgreContext : DbContext
 {
     private readonly IConfigurationSection _section;
 
-    public DbSet<RoleClaimDbModel> RoleClaims { get; set; } = null!;
-    public DbSet<RoleDbModel> Roles { get; set; } = null!;
-    public DbSet<RoleUserClaimDbModel> RoleUserClaims { get; set; } = null!;
-    public DbSet<UserClaimDbModel> UserClaims { get; set; } = null!;
-    public DbSet<UserDbModel> Users { get; set; } = null!;
+    public DbSet<Model.Identity.RoleClaimDbModel> RoleClaims { get; set; } = null!;
+    public DbSet<Model.Identity.RoleDbModel> Roles { get; set; } = null!;
+    public DbSet<Model.Identity.RoleUserClaimDbModel> RoleUserClaims { get; set; } = null!;
+    public DbSet<Model.Identity.UserClaimDbModel> UserClaims { get; set; } = null!;
+    public DbSet<Model.Identity.UserDbModel> Users { get; set; } = null!;
+
+    public DbSet<Model.Company.CompanyDbModel> Companies { get; set; } = null!;
+    public DbSet<Model.Company.CompanyProductDbModel> CompanyProducts { get; set; } = null!;
+    public DbSet<Model.Company.CompanyUserClaimDbModel> CompanyUserClaims { get; set; } = null!;
 
     public PostgreContext(IConfigurationSection section)
     {
@@ -35,27 +38,42 @@ internal class PostgreContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<RoleClaimDbModel>(builder =>
+        modelBuilder.Entity<Model.Identity.RoleClaimDbModel>(builder =>
         {
 
         });
 
-        modelBuilder.Entity<RoleDbModel>(builder =>
+        modelBuilder.Entity<Model.Identity.RoleDbModel>(builder =>
         {
 
         });
 
-        modelBuilder.Entity<RoleUserClaimDbModel>(builder =>
+        modelBuilder.Entity<Model.Identity.RoleUserClaimDbModel>(builder =>
         {
 
         });
 
-        modelBuilder.Entity<UserClaimDbModel>(builder =>
+        modelBuilder.Entity<Model.Identity.UserClaimDbModel>(builder =>
         {
 
         });
 
-        modelBuilder.Entity<UserDbModel>(builder =>
+        modelBuilder.Entity<Model.Identity.UserDbModel>(builder =>
+        {
+
+        });
+
+        modelBuilder.Entity<Model.Company.CompanyDbModel>(builder =>
+        {
+
+        });
+
+        modelBuilder.Entity<Model.Company.CompanyProductDbModel>(builder =>
+        {
+
+        });
+
+        modelBuilder.Entity<Model.Company.CompanyUserClaimDbModel>(builder =>
         {
 
         });
