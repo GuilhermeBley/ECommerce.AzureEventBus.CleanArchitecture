@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Ecommerce.Catalog.Infrastructure.Model.Product;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Ecommerce.Catalog.Infrastructure.PostgreSql;
@@ -72,6 +73,11 @@ internal class PostgreContext : DbContext
 
         modelBuilder.Entity<Model.Company.CompanyProductDbModel>(builder =>
         {
+            builder.HasKey(x => x.Id);
+            builder
+                .HasOne(x => x.Product)
+                .WithMany()
+                .HasForeignKey(x => x.ProductId);
 
         });
 
@@ -80,9 +86,9 @@ internal class PostgreContext : DbContext
 
         });
 
-        modelBuilder.Entity < Model.Product.ProductDbModel>(builder =>
+        modelBuilder.Entity<Model.Product.ProductDbModel>(builder =>
         {
-
+            builder.HasKey(x => x.Id);
         });
     }
 }
