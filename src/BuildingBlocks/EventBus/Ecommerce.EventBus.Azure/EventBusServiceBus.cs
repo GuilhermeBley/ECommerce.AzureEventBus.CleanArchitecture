@@ -73,7 +73,7 @@ namespace Ecommerce.EventBus.Azure
             {
                 try
                 {
-                    _subscriptionClient.AddRuleAsync(new RuleDescription
+                    _subscriptionClient.CreateRuleManager("","").CreateRuleAsync(new RuleDescription
                     {
                         Filter = new CorrelationFilter { Label = eventName },
                         Name = eventName
@@ -122,29 +122,28 @@ namespace Ecommerce.EventBus.Azure
 
         private void RegisterSubscriptionClientMessageHandler()
         {
-            _subscriptionClient.RegisterMessageHandler(
-                async (message, token) =>
+            var processor = _subscriptionClient.CreateSessionProcessor("", "");
+            processor.ProcessMessageAsync += async (psm) =>
                 {
-                    var eventName = $"{message.Label}{INTEGRATION_EVENT_SUFIX}";
-                    var messageData = Encoding.UTF8.GetString(message.Body);
+                    var eventName = $"{psm.Identifier}{INTEGRATION_EVENT_SUFIX}";
+                    var messageData = Encoding.UTF8.GetString(psm.Message.Body);
 
                     // Complete the message so that it is not received again.
                     if (await ProcessEvent(eventName, messageData))
                     {
                         await _subscriptionClient.CompleteAsync(message.SystemProperties.LockToken);
                     }
-                },
-               new MessageHandlerOptions(ExceptionReceivedHandler) { MaxConcurrentCalls = 20, AutoComplete = false });
+                };
+            processor.ProcessErrorAsync += ExceptionReceivedHandler;
+
+            processor.StartProcessingAsync().GetAwaiter().GetResult();
         }
 
-        private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)
+        private Task ExceptionReceivedHandler(ProcessErrorEventArgs exceptionReceivedEventArgs)
         {
             Console.WriteLine($"Message handler encountered an exception {exceptionReceivedEventArgs.Exception}.");
-            var context = exceptionReceivedEventArgs.ExceptionReceivedContext;
             Console.WriteLine("Exception context for troubleshooting:");
-            Console.WriteLine($"- Endpoint: {context.Endpoint}");
-            Console.WriteLine($"- Entity Path: {context.EntityPath}");
-            Console.WriteLine($"- Executing Action: {context.Action}");
+            Console.WriteLine($"- Entity Path: {exceptionReceivedEventArgs.EntityPath}");
             return Task.CompletedTask;
         }
 
