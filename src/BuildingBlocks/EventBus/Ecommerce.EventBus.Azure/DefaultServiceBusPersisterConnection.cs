@@ -18,7 +18,7 @@ public class DefaultServiceBusPersisterConnection : IServiceBusPersisterConnecti
         ILogger<DefaultServiceBusPersisterConnection> logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
+        
         _busClient = new ServiceBusClient(connectionString);
     }
 
