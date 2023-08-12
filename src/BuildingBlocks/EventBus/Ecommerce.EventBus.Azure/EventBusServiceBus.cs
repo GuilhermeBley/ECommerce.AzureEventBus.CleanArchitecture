@@ -1,44 +1,43 @@
 ﻿using Azure.Messaging.ServiceBus;
+using Azure.Messaging.ServiceBus.Administration;
 using Ecommerce.EventBus.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Ecommerce.EventBus.Azure
 {
-    internal class EventBusServiceBus
+    internal class EventBusServiceBus : IEventBus
     {
         private const string INTEGRATION_EVENT_SUFIX = nameof(IntegrationEvent);
 
         private readonly IServiceBusPersisterConnection _serviceBusPersisterConnection;
         private readonly ILogger<EventBusServiceBus> _logger;
         private readonly IEventBusSubscriptionsManager _subsManager;
-        private readonly ServiceBusClient _subscriptionClient;
+        private readonly ServiceBusProcessor _subscriptionProcessor;
+        private readonly ServiceBusRuleManager _subscriptionRuleManager;
         private readonly IServiceScope _scopeLifeTime;
 
         public EventBusServiceBus(
             IServiceBusPersisterConnection serviceBusPersisterConnection,
             ILogger<EventBusServiceBus> logger, 
             IEventBusSubscriptionsManager subsManager, 
-            string subscriptionClientName,
+            IOptions<AzureServiceBusOptions> options,
             IServiceProvider provider)
         {
             _serviceBusPersisterConnection = serviceBusPersisterConnection;
             _logger = logger;
             _subsManager = subsManager ?? new InMemoryEventBusSubscriptionsManager();
-
-            _subscriptionClient = new ServiceBusClient(serviceBusPersisterConnection.ConnectionString);
+            var subscriptionClient = new ServiceBusClient(serviceBusPersisterConnection.ConnectionString);
             _scopeLifeTime = provider.CreateScope();
-
+            _subscriptionProcessor = subscriptionClient.CreateProcessor(options.Value.TopicName, options.Value.Subscription);
+            _subscriptionRuleManager = subscriptionClient.CreateRuleManager(options.Value.TopicName, options.Value.Subscription);
             RegisterSubscriptionClientMessageHandler();
         }
 
-        public void Publish(IntegrationEvent @event)
+        public async Task PublishAsync(IntegrationEvent @event)
         {
             var eventName = @event.GetType().Name.Replace(INTEGRATION_EVENT_SUFIX, string.Empty);
             var jsonMessage = JsonSerializer.Serialize(@event);
@@ -47,13 +46,12 @@ namespace Ecommerce.EventBus.Azure
             var message = new ServiceBusMessage(body)
             {
                 MessageId = Guid.NewGuid().ToString(),
+                Subject = eventName
             };
 
-            var topicClient = _serviceBusPersisterConnection.CreateModel("");
+            var topicClient = _serviceBusPersisterConnection.CreateModel();
 
-            topicClient.SendMessageAsync(message)
-                .GetAwaiter()
-                .GetResult();
+            await topicClient.SendMessageAsync(message);
         }
 
         public void SubscribeDynamic<TH>(string eventName)
@@ -73,11 +71,13 @@ namespace Ecommerce.EventBus.Azure
             {
                 try
                 {
-                    _subscriptionClient.CreateRuleManager("","").CreateRuleAsync(new RuleDescription
-                    {
-                        Filter = new CorrelationFilter { Label = eventName },
-                        Name = eventName
-                    }).GetAwaiter().GetResult();
+                    _subscriptionRuleManager
+                        .CreateRuleAsync(
+                        eventName,
+                        new CorrelationRuleFilter
+                        {
+                             Subject = eventName,
+                        }).GetAwaiter().GetResult();
                 }
                 catch (ServiceBusException)
                 {
@@ -96,12 +96,12 @@ namespace Ecommerce.EventBus.Azure
 
             try
             {
-                _subscriptionClient
-                 .RemoveRuleAsync(eventName)
+                _subscriptionRuleManager
+                 .DeleteRuleAsync(eventName)
                  .GetAwaiter()
                  .GetResult();
             }
-            catch (MessagingEntityNotFoundException)
+            catch (ServiceBusException ex) when (ex.Reason == ServiceBusFailureReason.MessagingEntityNotFound)
             {
                 _logger.LogInformation($"The messaging entity {eventName} Could not be found.");
             }
@@ -122,21 +122,20 @@ namespace Ecommerce.EventBus.Azure
 
         private void RegisterSubscriptionClientMessageHandler()
         {
-            var processor = _subscriptionClient.CreateSessionProcessor("", "");
-            processor.ProcessMessageAsync += async (psm) =>
+            _subscriptionProcessor.ProcessMessageAsync += async (psm) =>
                 {
                     var eventName = $"{psm.Identifier}{INTEGRATION_EVENT_SUFIX}";
                     var messageData = Encoding.UTF8.GetString(psm.Message.Body);
-
+                    
                     // Complete the message so that it is not received again.
                     if (await ProcessEvent(eventName, messageData))
                     {
-                        await _subscriptionClient.CompleteAsync(message.SystemProperties.LockToken);
+                        await psm.CompleteMessageAsync(psm.Message);
                     }
                 };
-            processor.ProcessErrorAsync += ExceptionReceivedHandler;
+            _subscriptionProcessor.ProcessErrorAsync += ExceptionReceivedHandler;
 
-            processor.StartProcessingAsync().GetAwaiter().GetResult();
+            _subscriptionProcessor.StartProcessingAsync().GetAwaiter().GetResult();
         }
 
         private Task ExceptionReceivedHandler(ProcessErrorEventArgs exceptionReceivedEventArgs)
@@ -152,47 +151,36 @@ namespace Ecommerce.EventBus.Azure
             var processed = false;
             if (_subsManager.HasSubscriptionsForEvent(eventName))
             {
-                using (var scope = _autofac.BeginLifetimeScope(AUTOFAC_SCOPE_NAME))
+                await using (var scope = _scopeLifeTime.ServiceProvider.CreateAsyncScope())
                 {
                     var subscriptions = _subsManager.GetHandlersForEvent(eventName);
                     foreach (var subscription in subscriptions)
                     {
                         if (subscription.IsDynamic)
                         {
-                            var handler = scope.ResolveOptional(subscription.HandlerType) as IDynamicIntegrationEventHandler;
+                            var handler = scope.ServiceProvider.GetRequiredService(subscription.HandlerType) as IDynamicIntegrationEventHandler;
                             if (handler == null) continue;
-                            dynamic eventData = JObject.Parse(message);
+                            dynamic? eventData = JsonSerializer.Deserialize<dynamic>(message);
                             await handler.Handle(eventData);
                         }
                         else
                         {
-                            var handler = scope.ResolveOptional(subscription.HandlerType);
+                            var handler = scope.ServiceProvider.GetRequiredService(subscription.HandlerType);
                             if (handler == null) continue;
                             var eventType = _subsManager.GetEventTypeByName(eventName);
+                            if (eventType is null) continue;
                             var integrationEvent = JsonSerializer.Deserialize(message, eventType);
+                            if (integrationEvent is null) continue;
                             var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
-                            await (Task)concreteType?.GetMethod("Handle")?.Invoke(handler, new object[] { integrationEvent });
+                            var tsk = concreteType?.GetMethod("Handle")?.Invoke(handler, new object[] { integrationEvent }) as Task;
+                            if (tsk is not null)
+                                await tsk.ConfigureAwait(false);
                         }
                     }
                 }
                 processed = true;
             }
             return processed;
-        }
-
-        private void RemoveDefaultRule()
-        {
-            try
-            {
-                _subscriptionClient
-                 .RemoveRuleAsync(RuleDescription.DefaultRuleName)
-                 .GetAwaiter()
-                 .GetResult();
-            }
-            catch (MessagingEntityNotFoundException)
-            {
-                _logger.LogInformation($"The messaging entity {RuleDescription.DefaultRuleName} Could not be found.");
-            }
         }
     }
 }
