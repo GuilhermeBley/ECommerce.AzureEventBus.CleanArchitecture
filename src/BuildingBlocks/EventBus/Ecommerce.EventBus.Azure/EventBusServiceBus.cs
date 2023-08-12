@@ -30,7 +30,7 @@ namespace Ecommerce.EventBus.Azure
             _serviceBusPersisterConnection = serviceBusPersisterConnection;
             _logger = logger;
             _subsManager = subsManager ?? new InMemoryEventBusSubscriptionsManager();
-            var subscriptionClient = new ServiceBusClient(serviceBusPersisterConnection.ConnectionString);
+            var subscriptionClient = new ServiceBusClient(options.Value.ConnectionString);
             _scopeLifeTime = provider.CreateScope();
             _subscriptionProcessor = subscriptionClient.CreateProcessor(options.Value.TopicName, options.Value.Subscription);
             _subscriptionRuleManager = subscriptionClient.CreateRuleManager(options.Value.TopicName, options.Value.Subscription);
