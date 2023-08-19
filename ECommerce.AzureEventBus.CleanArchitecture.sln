@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecommerce.Catalog.Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ecommerce.EventBus.Azure", "src\BuildingBlocks\EventBus\Ecommerce.EventBus.Azure\Ecommerce.EventBus.Azure.csproj", "{2D0449C1-7DD3-49AA-834F-6E916A00B3FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Catalog.Api", "Ecommerce.Catalog.Api\Ecommerce.Catalog.Api.csproj", "{11E88768-F700-4048-B8BF-99E8DBBB2502}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Catalog.Api", "src\Services\Catalog\Ecommerce.Catalog.Api\Ecommerce.Catalog.Api.csproj", "{657D46EE-8EF8-44C4-9DA7-4382C82DC6F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +55,10 @@ Global
 		{11E88768-F700-4048-B8BF-99E8DBBB2502}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11E88768-F700-4048-B8BF-99E8DBBB2502}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11E88768-F700-4048-B8BF-99E8DBBB2502}.Release|Any CPU.Build.0 = Release|Any CPU
+		{657D46EE-8EF8-44C4-9DA7-4382C82DC6F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{657D46EE-8EF8-44C4-9DA7-4382C82DC6F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{657D46EE-8EF8-44C4-9DA7-4382C82DC6F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{657D46EE-8EF8-44C4-9DA7-4382C82DC6F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,6 +74,7 @@ Global
 		{6D5E54E3-8953-4F5D-ABC9-52281B010E60} = {947E7B87-6B1C-46AA-AF6F-08B45CCDA4A7}
 		{2D0449C1-7DD3-49AA-834F-6E916A00B3FD} = {677EA071-442F-4450-811D-D387C58707DB}
 		{11E88768-F700-4048-B8BF-99E8DBBB2502} = {947E7B87-6B1C-46AA-AF6F-08B45CCDA4A7}
+		{657D46EE-8EF8-44C4-9DA7-4382C82DC6F8} = {947E7B87-6B1C-46AA-AF6F-08B45CCDA4A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D54C66FB-CF5B-4D41-A1BE-D5568AA959E6}
