@@ -1,26 +1,12 @@
 ﻿namespace Ecommerce.Catalog.Application.Notifications.Product.UpdateProduct
 {
-    public class UpdateProductEventHandler : IAppNotificationHandler<UpdateProductNotification>
+    public class UpdateProductEventHandler : IIntegrationEventHandler<UpdateProductNotification>
     {
-        private readonly IEventBus _eventBus;
-
-        public UpdateProductEventHandler(IEventBus eventBus)
+        public UpdateProductEventHandler()
         {
-            _eventBus = eventBus;
         }
 
-        public async Task Handle(UpdateProductNotification notification, CancellationToken cancellationToken)
-            => await _eventBus.PublishAsync(
-                new UpdateProductNotificationIntegrationEvent
-                {
-                    Id = notification.Id,
-                });
-
-        private class UpdateProductNotificationIntegrationEvent : IntegrationEvent
-        {
-            public Guid Id { get; set; }
-            public string Name { get; set; } = string.Empty;
-            public double Value { get; set; }
-        }
+        public async Task Handle(UpdateProductNotification notification)
+            => await Task.CompletedTask;
     }
 }

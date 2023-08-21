@@ -8,14 +8,14 @@ namespace Ecommerce.Catalog.Application.Commands.Product.CreateProduct;
 
 public class CreateProductHandler : IAppRequestHandler<CreateProductRequest, Result<CreateProductResponse>>
 {
-    private readonly IAppMediator _appMediator;
+    private readonly IEventBus _eventBus;
     private readonly CatalogContext _catalogContext;
     private readonly ClaimsPrincipal _principal;
 
-    public CreateProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext, IAppMediator appMediator)
+    public CreateProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext, IEventBus eventBus)
     {
         _catalogContext = catalogContext;
-        _appMediator = appMediator;
+        _eventBus = eventBus;
         _principal = principal;
     }
 
@@ -58,7 +58,7 @@ public class CreateProductHandler : IAppRequestHandler<CreateProductRequest, Res
         var companyModel = Map(resultCompany.Value);
         await _catalogContext.CompanyProducts.AddAsync(companyModel);
 
-        await _appMediator.Publish(new CreateProductNotification { Id = productModel.Id });
+        await _eventBus.PublishAsync(new CreateProductNotification { Id = productModel.Id });
 
         await _catalogContext.SaveChangesAsync();
         await transaction.CommitAsync();

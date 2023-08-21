@@ -1,8 +1,5 @@
-﻿using Ecommerce.Catalog.Application.Commands.Product.CreateProduct;
-using Ecommerce.Catalog.Application.Commands.Product.DeleteProduct;
-using Ecommerce.Catalog.Application.Notifications.Product.UpdateProduct;
+﻿using Ecommerce.Catalog.Application.Notifications.Product.UpdateProduct;
 using Ecommerce.Catalog.Application.Repositories;
-using Ecommerce.Catalog.Core.Entities.Product;
 using Ecommerce.Catalog.Core.Extension;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -11,13 +8,13 @@ namespace Ecommerce.Catalog.Application.Commands.Product.UpdateProduct;
 
 public class UpdateProductHandler : IAppRequestHandler<UpdateProductRequest, Result<UpdateProductResponse>>
 {
-    private readonly IAppMediator _mediator;
+    private readonly IEventBus _eventBus;
     private readonly CatalogContext _catalogContext;
     private readonly ClaimsPrincipal _principal;
 
-    public UpdateProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext, IAppMediator mediator)
+    public UpdateProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext, IEventBus eventBus)
     {
-        _mediator = mediator;
+        _eventBus = eventBus;
         _catalogContext = catalogContext;
         _principal = principal;
     }
@@ -63,7 +60,7 @@ public class UpdateProductHandler : IAppRequestHandler<UpdateProductRequest, Res
         productToUpdate.Description = resultEntityProduct.Value.Description;
         productToUpdate.Name = resultEntityProduct.Value.Name;
 
-        await _mediator.Publish(
+        await _eventBus.PublishAsync(
             new UpdateProductNotification
             {
                 Id = productToUpdate.Id,

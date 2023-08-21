@@ -9,13 +9,13 @@ namespace Ecommerce.Catalog.Application.Commands.Product.DeleteProduct;
 
 public class DeleteProductHandler : IAppRequestHandler<DeleteProductRequest, Result<DeleteProductResponse>>
 {
-    private readonly IAppMediator _mediator;
+    private readonly IEventBus _eventBus;
     private readonly CatalogContext _catalogContext;
     private readonly ClaimsPrincipal _principal;
 
-    public DeleteProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext, IAppMediator mediator)
+    public DeleteProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext, IEventBus eventBus)
     {
-        _mediator = mediator;
+        _eventBus = eventBus;
         _catalogContext = catalogContext;
         _principal = principal;
     }
@@ -46,7 +46,7 @@ public class DeleteProductHandler : IAppRequestHandler<DeleteProductRequest, Res
 
         _catalogContext.Products.Remove(product);
 
-        await _mediator.Publish(new DeleteProductNotification
+        await _eventBus.PublishAsync(new DeleteProductNotification
         { 
             Id = product.Id,
             Name = product.Name,
