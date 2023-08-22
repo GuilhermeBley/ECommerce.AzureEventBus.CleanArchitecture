@@ -1,0 +1,1 @@
+﻿global using Ecommerce.Catalog.Core.Primitive.Result;
