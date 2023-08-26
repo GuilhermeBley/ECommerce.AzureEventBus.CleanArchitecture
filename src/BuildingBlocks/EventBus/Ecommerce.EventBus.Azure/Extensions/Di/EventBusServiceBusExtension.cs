@@ -9,6 +9,8 @@ public static class EventBusServiceBusExtension
 {
     public static IServiceCollection AddEventBus(this IServiceCollection serviceCollection)
     {
+        serviceCollection.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
+
         serviceCollection.AddSingleton<IEventBus>(
             provider => {
 
@@ -21,7 +23,7 @@ public static class EventBusServiceBusExtension
                         options: eventBusOptions
                     );
 
-                var subsManager = new InMemoryEventBusSubscriptionsManager();
+                var subsManager = provider.GetRequiredService<IEventBusSubscriptionsManager>();
 
                 return new EventBusServiceBus(
                     serviceBusPersisterConnection: serviceBusPersisterConnection,
