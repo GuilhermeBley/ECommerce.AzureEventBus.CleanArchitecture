@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Ecommerce.Catalog.Application\Ecommerce.Catalog.Application.csproj" />
     <ProjectReference Include="..\Ecommerce.Catalog.Infrastructure\Ecommerce.Catalog.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\Ecommerce.EventBus.Azure\Ecommerce.EventBus.Azure.csproj" />
   </ItemGroup>
 
 </Project>
