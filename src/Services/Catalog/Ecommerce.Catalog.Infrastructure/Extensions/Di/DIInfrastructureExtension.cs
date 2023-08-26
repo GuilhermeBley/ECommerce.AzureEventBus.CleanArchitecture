@@ -18,6 +18,7 @@ public static class DIInfrastructureExtension
         .AddMediatR(options => options.RegisterServicesFromAssemblies(typeof(IAppMediator).Assembly))
         .AddSingleton<IAppMediator, MediatRAdapter>()
         .AddTransient(typeof(IRequestHandler<,>), typeof(RequestHandlerAdapter<,>))
-        .AddTransient(typeof(INotificationHandler<>), typeof(NotificationHandlerAdapter<>));
+        .AddTransient(typeof(INotificationHandler<>), typeof(NotificationHandlerAdapter<>))
+        .AddDbContext<PostgreSql.PostgreContext>();
 
 }

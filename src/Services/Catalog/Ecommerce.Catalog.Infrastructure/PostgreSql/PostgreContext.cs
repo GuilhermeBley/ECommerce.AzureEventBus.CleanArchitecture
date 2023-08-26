@@ -1,12 +1,14 @@
 ﻿using Ecommerce.Catalog.Infrastructure.Model.Product;
+using Ecommerce.Catalog.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Ecommerce.Catalog.Infrastructure.PostgreSql;
 
 internal class PostgreContext : DbContext
 {
-    private readonly IConfigurationSection _section;
+    private readonly IOptions<PostgreOptions> _options;
 
     public DbSet<Model.Identity.RoleClaimDbModel> RoleClaims { get; set; } = null!;
     public DbSet<Model.Identity.RoleDbModel> Roles { get; set; } = null!;
@@ -20,9 +22,9 @@ internal class PostgreContext : DbContext
 
     public DbSet<Model.Product.ProductDbModel> Products { get; set; } = null!;
 
-    public PostgreContext(IConfigurationSection section)
+    public PostgreContext(IOptions<PostgreOptions> options)
     {
-        _section = section;
+        _options = options;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -31,7 +33,7 @@ internal class PostgreContext : DbContext
 
         optionsBuilder
             .UseNpgsql(
-                _section["connectionString"],
+                _options.Value.ConnectionString,
                 opt =>
                 {
                 });
