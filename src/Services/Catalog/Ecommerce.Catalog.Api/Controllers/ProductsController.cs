@@ -1,6 +1,8 @@
 ﻿using Ecommerce.Catalog.Api.Model.Product;
 using Ecommerce.Catalog.Application.Commands.Product.CreateProduct;
+using Ecommerce.Catalog.Application.Commands.Product.GetProductById;
 using Ecommerce.Catalog.Application.Mediator;
+using Ecommerce.Catalog.Application.Model.Product;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Catalog.Api.Controllers;
@@ -31,6 +33,27 @@ public class ProductsController : ControllerBase
 
         if (result.IsSuccess)
             return Ok(result.Value);
+
+        return BadRequest(result.Errors);
+    }
+
+    [HttpGet("{productId}")]
+    public async Task<ActionResult<ProductModel>> GetProduct(Guid productId, CancellationToken cancellationToken = default)
+    {
+        var request = new GetProductByIdRequest
+        {
+            Id = productId
+        };
+
+        var result = await _mediator.Send<GetProductByIdRequest, Result<ProductModel?>>(request, cancellationToken);
+
+        if (result.TryGetValue(out var productModel))
+        {
+            if (productModel is null)
+                return NoContent();
+
+            return Ok(productModel);
+        }
 
         return BadRequest(result.Errors);
     }
