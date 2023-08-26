@@ -1,4 +1,5 @@
 using Ecommerce.EventBus.Azure.Extensions.Di;
+using Ecommerce.Catalog.Infrastructure.Extensions.Di;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddEventBus();
+
+builder.Services.AddInfrastructure();
 
 builder.Services.Configure<Ecommerce.EventBus.Azure.AzureServiceBusOptions>(
      builder.Configuration.GetSection(Ecommerce.EventBus.Azure.AzureServiceBusOptions.SECTION));
