@@ -1,4 +1,5 @@
-﻿using Ecommerce.Catalog.Infrastructure.Model.Product;
+﻿using Ecommerce.Catalog.Application.Repositories;
+using Ecommerce.Catalog.Infrastructure.Model.Product;
 using Ecommerce.Catalog.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -6,21 +7,9 @@ using Microsoft.Extensions.Options;
 
 namespace Ecommerce.Catalog.Infrastructure.PostgreSql;
 
-internal class PostgreContext : DbContext
+internal class PostgreContext : CatalogContext
 {
     private readonly IOptions<PostgreOptions> _options;
-
-    public DbSet<Model.Identity.RoleClaimDbModel> RoleClaims { get; set; } = null!;
-    public DbSet<Model.Identity.RoleDbModel> Roles { get; set; } = null!;
-    public DbSet<Model.Identity.RoleUserClaimDbModel> RoleUserClaims { get; set; } = null!;
-    public DbSet<Model.Identity.UserClaimDbModel> UserClaims { get; set; } = null!;
-    public DbSet<Model.Identity.UserDbModel> Users { get; set; } = null!;
-
-    public DbSet<Model.Company.CompanyDbModel> Companies { get; set; } = null!;
-    public DbSet<Model.Company.CompanyProductDbModel> CompanyProducts { get; set; } = null!;
-    public DbSet<Model.Company.CompanyUserClaimDbModel> CompanyUserClaims { get; set; } = null!;
-
-    public DbSet<Model.Product.ProductDbModel> Products { get; set; } = null!;
 
     public PostgreContext(IOptions<PostgreOptions> options)
     {

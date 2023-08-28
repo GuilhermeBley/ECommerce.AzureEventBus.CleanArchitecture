@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Catalog.Application.Mediator;
+using Ecommerce.Catalog.Application.Repositories;
 using Ecommerce.Catalog.Application.Security;
 using Ecommerce.Catalog.Infrastructure.Mediator;
 using MediatR;
@@ -28,6 +29,7 @@ public static class DIInfrastructureExtension
 
     private static IServiceCollection AddApplicationContext(this IServiceCollection serviceDescriptors)
         => serviceDescriptors
-        .AddDbContext<PostgreSql.PostgreContext>();
+        .AddDbContext<PostgreSql.PostgreContext>()
+        .AddScoped<CatalogContext>(provider => provider.GetRequiredService<PostgreSql.PostgreContext>());
 
 }
