@@ -1,20 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-	<PackageReference Include="Autofac" Version="6.5.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Ecommerce.Catalog.Application\Ecommerce.Catalog.Application.csproj" />
-    <ProjectReference Include="..\Ecommerce.Catalog.Infrastructure\Ecommerce.Catalog.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\Ecommerce.EventBus.Azure\Ecommerce.EventBus.Azure.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Ecommerce.Catalog.Application\Ecommerce.Catalog.Application.csproj" />
+		<ProjectReference Include="..\Ecommerce.Catalog.Infrastructure\Ecommerce.Catalog.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\..\BuildingBlocks\EventBus\Ecommerce.EventBus.Azure\Ecommerce.EventBus.Azure.csproj" />
+	</ItemGroup>
 
 </Project>
