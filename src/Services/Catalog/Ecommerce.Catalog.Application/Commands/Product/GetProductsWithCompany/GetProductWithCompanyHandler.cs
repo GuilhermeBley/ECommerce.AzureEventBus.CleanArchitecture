@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Catalog.Application.Model.Product;
 using Ecommerce.Catalog.Application.Repositories;
+using Ecommerce.Catalog.Application.Security;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -9,12 +10,12 @@ public class GetProductWithCompanyHandler
     : IAppRequestHandler<GetProductWithCompanyRequest, Result<IQueryable<QueryProductCompany>>>
 {
     private readonly CatalogContext _catalogContext;
-    private readonly ClaimsPrincipal _principal;
+    private readonly IClaimProvider _claimProvider;
 
-    public GetProductWithCompanyHandler(ClaimsPrincipal principal, CatalogContext catalogContext)
+    public GetProductWithCompanyHandler(IClaimProvider principal, CatalogContext catalogContext)
     {
         _catalogContext = catalogContext;
-        _principal = principal;
+        _claimProvider = principal;
     }
 
     public async Task<Result<IQueryable<QueryProductCompany>>> Handle(GetProductWithCompanyRequest request, 

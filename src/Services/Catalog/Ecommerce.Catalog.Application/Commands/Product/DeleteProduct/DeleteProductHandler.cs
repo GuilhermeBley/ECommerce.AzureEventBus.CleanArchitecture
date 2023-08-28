@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Catalog.Application.Commands.Product.CreateProduct;
 using Ecommerce.Catalog.Application.Notifications.Product.DeleteProduct;
 using Ecommerce.Catalog.Application.Repositories;
+using Ecommerce.Catalog.Application.Security;
 using Ecommerce.Catalog.Core.Extension;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -11,20 +12,23 @@ public class DeleteProductHandler : IAppRequestHandler<DeleteProductRequest, Res
 {
     private readonly IEventBus _eventBus;
     private readonly CatalogContext _catalogContext;
-    private readonly ClaimsPrincipal _principal;
+    private readonly IClaimProvider _claimProvider;
 
-    public DeleteProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext, IEventBus eventBus)
+    public DeleteProductHandler(IClaimProvider principal, CatalogContext catalogContext, IEventBus eventBus)
     {
         _eventBus = eventBus;
         _catalogContext = catalogContext;
-        _principal = principal;
+        _claimProvider = principal;
     }
 
     public async Task<Result<DeleteProductResponse>> Handle(DeleteProductRequest request, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var claimCompany = _principal.GetCompany();
+        var principal = await _claimProvider.GetCurrentAsync()
+            ?? throw new InvalidOperationException();
+
+        var claimCompany = principal.GetCompany();
 
         if (!claimCompany.TryGetValue(out Guid companyId))
             return Result<DeleteProductResponse>.Failed(claimCompany.Errors);

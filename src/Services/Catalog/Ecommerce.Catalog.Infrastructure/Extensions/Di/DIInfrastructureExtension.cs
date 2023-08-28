@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Catalog.Application.Mediator;
+using Ecommerce.Catalog.Application.Security;
 using Ecommerce.Catalog.Infrastructure.Mediator;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,15 +11,23 @@ public static class DIInfrastructureExtension
     public static IServiceCollection AddInfrastructure(this IServiceCollection serviceDescriptors)
     {
         return serviceDescriptors
-            .AddApplicationMediator();
+            .AddApplicationMediator()
+            .AddApplicationContext();
     }
+
+    public static IServiceCollection AddClaimProvider(this IServiceCollection serviceDescriptors, Func<IServiceProvider, IClaimProvider> factory)
+        => serviceDescriptors
+        .AddScoped(factory);
 
     public static IServiceCollection AddApplicationMediator(this IServiceCollection serviceDescriptors)
         => serviceDescriptors
         .AddMediatR(options => options.RegisterServicesFromAssemblies(typeof(IAppMediator).Assembly))
         .AddSingleton<IAppMediator, MediatRAdapter>()
         .AddTransient(typeof(IRequestHandler<,>), typeof(RequestHandlerAdapter<,>))
-        .AddTransient(typeof(INotificationHandler<>), typeof(NotificationHandlerAdapter<>))
+        .AddTransient(typeof(INotificationHandler<>), typeof(NotificationHandlerAdapter<>));
+
+    private static IServiceCollection AddApplicationContext(this IServiceCollection serviceDescriptors)
+        => serviceDescriptors
         .AddDbContext<PostgreSql.PostgreContext>();
 
 }

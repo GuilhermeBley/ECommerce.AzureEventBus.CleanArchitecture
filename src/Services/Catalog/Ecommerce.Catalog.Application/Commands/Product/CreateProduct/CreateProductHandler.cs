@@ -2,6 +2,7 @@
 using Ecommerce.Catalog.Application.Model.Product;
 using Ecommerce.Catalog.Application.Notifications.Product.CreateProduct;
 using Ecommerce.Catalog.Application.Repositories;
+using Ecommerce.Catalog.Application.Security;
 using System.Security.Claims;
 
 namespace Ecommerce.Catalog.Application.Commands.Product.CreateProduct;
@@ -10,20 +11,23 @@ public class CreateProductHandler : IAppRequestHandler<CreateProductRequest, Res
 {
     private readonly IEventBus _eventBus;
     private readonly CatalogContext _catalogContext;
-    private readonly ClaimsPrincipal _principal;
+    private readonly IClaimProvider _claimProvider;
 
-    public CreateProductHandler(ClaimsPrincipal principal, CatalogContext catalogContext, IEventBus eventBus)
+    public CreateProductHandler(IClaimProvider principal, CatalogContext catalogContext, IEventBus eventBus)
     {
         _catalogContext = catalogContext;
         _eventBus = eventBus;
-        _principal = principal;
+        _claimProvider = principal;
     }
 
     public async Task<Result<CreateProductResponse>> Handle(CreateProductRequest request, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var claimCompany = _principal.GetCompany();
+        var principal = await _claimProvider.GetCurrentAsync() 
+            ?? throw new InvalidOperationException();
+
+        var claimCompany = principal.GetCompany();
 
         if (!claimCompany.TryGetValue(out Guid companyId))
             return Result<CreateProductResponse>.Failed(claimCompany.Errors);
