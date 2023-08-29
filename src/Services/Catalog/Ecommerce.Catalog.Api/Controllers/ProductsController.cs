@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Catalog.Api.Model.Product;
 using Ecommerce.Catalog.Application.Commands.Product.CreateProduct;
 using Ecommerce.Catalog.Application.Commands.Product.GetProductById;
+using Ecommerce.Catalog.Application.Commands.Product.GetProductsWithCompany;
 using Ecommerce.Catalog.Application.Mediator;
 using Ecommerce.Catalog.Application.Model.Product;
 using Microsoft.AspNetCore.Mvc;
@@ -53,6 +54,26 @@ public class ProductsController : ControllerBase
                 return NoContent();
 
             return Ok(productModel);
+        }
+
+        return BadRequest(result.Errors);
+    }
+
+    [HttpGet()]
+    public async Task<ActionResult<ProductModel>> GetProducts(CancellationToken cancellationToken = default)
+    {
+        var request = new GetProductWithCompanyRequest
+        {
+        };
+        
+        var result = await _mediator.Send<GetProductWithCompanyRequest, Result<IQueryable<QueryProductCompany>>>(request, cancellationToken);
+
+        if (result.TryGetValue(out var productsModels))
+        {
+            if (productsModels is null)
+                return NoContent();
+
+            return Ok(productsModels);
         }
 
         return BadRequest(result.Errors);
