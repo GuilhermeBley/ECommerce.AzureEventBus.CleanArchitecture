@@ -50,7 +50,8 @@ public class ProductsController : ControllerBase
 
         var result = await _mediator.Send<GetProductByIdRequest, Result<ProductModel?>>(request, cancellationToken);
 
-        if (result.TryGetValue(out var productModel))
+        if (result.IsSuccess &&
+            result.TryGetValue(out var productModel))
         {
             if (productModel is null)
                 return NoContent();
@@ -70,7 +71,8 @@ public class ProductsController : ControllerBase
         
         var result = await _mediator.Send<GetProductWithCompanyRequest, Result<IQueryable<QueryProductCompany>>>(request, cancellationToken);
 
-        if (result.TryGetValue(out var productsModels))
+        if (result.IsSuccess &&
+            result.TryGetValue(out var productsModels))
         {
             if (productsModels is null)
                 return NoContent();
@@ -86,7 +88,8 @@ public class ProductsController : ControllerBase
     {
         var result = await _mediator.Send<UpdateProductRequest, Result<UpdateProductResponse>>(request, cancellationToken);
 
-        if (result.TryGetValue(out var updateProductResponse))
+        if (result.IsSuccess &&
+            result.TryGetValue(out var updateProductResponse))
         {
             return Ok(updateProductResponse);
         }
