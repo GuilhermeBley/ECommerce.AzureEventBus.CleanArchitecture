@@ -2,8 +2,10 @@
 using Ecommerce.Catalog.Application.Commands.Product.CreateProduct;
 using Ecommerce.Catalog.Application.Commands.Product.GetProductById;
 using Ecommerce.Catalog.Application.Commands.Product.GetProductsWithCompany;
+using Ecommerce.Catalog.Application.Commands.Product.UpdateProduct;
 using Ecommerce.Catalog.Application.Mediator;
 using Ecommerce.Catalog.Application.Model.Product;
+using Ecommerce.Catalog.Application.Notifications.Product.UpdateProduct;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ecommerce.Catalog.Api.Controllers;
@@ -74,6 +76,19 @@ public class ProductsController : ControllerBase
                 return NoContent();
 
             return Ok(productsModels);
+        }
+
+        return BadRequest(result.Errors);
+    }
+
+    [HttpPut]
+    public async Task<ActionResult<ProductModel>> GetProducts([FromBody]UpdateProductRequest request, CancellationToken cancellationToken = default)
+    {
+        var result = await _mediator.Send<UpdateProductRequest, Result<UpdateProductResponse>>(request, cancellationToken);
+
+        if (result.TryGetValue(out var updateProductResponse))
+        {
+            return Ok(updateProductResponse);
         }
 
         return BadRequest(result.Errors);
