@@ -29,7 +29,7 @@ public static class DIInfrastructureExtension
 
     private static IServiceCollection AddApplicationContext(this IServiceCollection serviceDescriptors)
         => serviceDescriptors
-        .AddDbContext<PostgreSql.PostgreContext>()
-        .AddScoped<CatalogContext>(provider => provider.GetRequiredService<PostgreSql.PostgreContext>());
+        .AddDbContext<PostgreSql.PostgreCatalogContext>()
+        .AddScoped<CatalogContext>(provider => provider.GetRequiredService<PostgreSql.PostgreCatalogContext>());
 
 }

@@ -1,17 +1,18 @@
-﻿using Ecommerce.Catalog.Application.Repositories;
-using Ecommerce.Catalog.Infrastructure.Model.Product;
+﻿using Ecommerce.Catalog.Application.Model.Company;
+using Ecommerce.Catalog.Application.Model.Identity;
+using Ecommerce.Catalog.Application.Model.Product;
+using Ecommerce.Catalog.Application.Repositories;
 using Ecommerce.Catalog.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace Ecommerce.Catalog.Infrastructure.PostgreSql;
 
-internal class PostgreContext : CatalogContext
+public class PostgreCatalogContext : CatalogContext
 {
     private readonly IOptions<PostgresOptions> _options;
 
-    public PostgreContext(IOptions<PostgresOptions> options)
+    public PostgreCatalogContext(IOptions<PostgresOptions> options)
     {
         _options = options;
     }
@@ -25,6 +26,7 @@ internal class PostgreContext : CatalogContext
                 _options.Value.ConnectionString,
                 opt =>
                 {
+                    opt.MigrationsAssembly("Ecommerce.Catalog.Api");
                 });
     }
 
@@ -32,11 +34,11 @@ internal class PostgreContext : CatalogContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Model.Identity.RoleClaimDbModel>(builder =>
+        modelBuilder.Entity<Application.Model.Identity.RoleClaimModel>(builder =>
         {
             builder.HasKey(x => x.IdClaim);
             builder
-                .HasOne(x => x.Role)
+                .HasOne<RoleModel>()
                 .WithMany()
                 .HasForeignKey(x => x.IdRole);
         });
@@ -47,58 +49,58 @@ internal class PostgreContext : CatalogContext
             builder.HasIndex(x => x.NormalizedName).IsUnique();
         });
 
-        modelBuilder.Entity<Model.Identity.RoleUserClaimDbModel>(builder =>
+        modelBuilder.Entity<Application.Model.Identity.RoleUserClaimModel>(builder =>
         {
             builder.HasKey(x => x.Id);
             builder
-                .HasOne(x => x.User)
+                .HasOne<UserModel>()
                 .WithMany()
                 .HasForeignKey(x => x.UserId);
         });
 
-        modelBuilder.Entity<Model.Identity.UserClaimDbModel>(builder =>
+        modelBuilder.Entity<Application.Model.Identity.UserClaimModel>(builder =>
         {
             builder.HasKey(x => x.IdClaim);
             builder
-                .HasOne(x => x.User)
+                .HasOne<UserModel>()
                 .WithMany()
                 .HasForeignKey(x => x.UserId);
         });
 
-        modelBuilder.Entity<Model.Identity.UserDbModel>(builder =>
+        modelBuilder.Entity<Application.Model.Identity.UserModel>(builder =>
         {
             builder.HasKey(x => x.Id);
             builder.HasIndex(x => x.Email).IsUnique();
         });
 
-        modelBuilder.Entity<Model.Company.CompanyDbModel>(builder =>
+        modelBuilder.Entity<Application.Model.Company.CompanyModel>(builder =>
         {
             builder.HasKey(x => x.Id);
         });
 
-        modelBuilder.Entity<Model.Company.CompanyProductDbModel>(builder =>
+        modelBuilder.Entity<Application.Model.Company.CompanyProductModel>(builder =>
         {
             builder.HasKey(x => x.Id);
             builder
-                .HasOne(x => x.Product)
+                .HasOne<ProductModel>()
                 .WithMany()
                 .HasForeignKey(x => x.ProductId);
         });
 
-        modelBuilder.Entity<Model.Company.CompanyUserClaimDbModel>(builder =>
+        modelBuilder.Entity<Application.Model.Company.CompanyUserClaimModel>(builder =>
         {
             builder.HasKey(x => x.Id);
             builder
-                .HasOne(x => x.Company)
+                .HasOne<CompanyModel>()
                 .WithMany()
                 .HasForeignKey(x => x.CompanyId);
             builder
-                .HasOne(x => x.User)
+                .HasOne<UserModel>()
                 .WithMany()
                 .HasForeignKey(x => x.UserId);
         });
 
-        modelBuilder.Entity<Model.Product.ProductDbModel>(builder =>
+        modelBuilder.Entity<Application.Model.Product.ProductModel>(builder =>
         {
             builder.HasKey(x => x.Id);
         });
