@@ -48,6 +48,9 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 builder.Services.Configure<Ecommerce.EventBus.Azure.AzureServiceBusOptions>(
      builder.Configuration.GetSection(Ecommerce.EventBus.Azure.AzureServiceBusOptions.SECTION));
 
+builder.Services.Configure<Ecommerce.Catalog.Infrastructure.Options.PostgresOptions>(
+     builder.Configuration.GetSection(Ecommerce.Catalog.Infrastructure.Options.PostgresOptions.SECTION));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
