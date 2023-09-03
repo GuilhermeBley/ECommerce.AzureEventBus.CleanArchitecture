@@ -9,9 +9,9 @@ namespace Ecommerce.Catalog.Infrastructure.PostgreSql;
 
 internal class PostgreContext : CatalogContext
 {
-    private readonly IOptions<PostgreOptions> _options;
+    private readonly IOptions<PostgresOptions> _options;
 
-    public PostgreContext(IOptions<PostgreOptions> options)
+    public PostgreContext(IOptions<PostgresOptions> options)
     {
         _options = options;
     }

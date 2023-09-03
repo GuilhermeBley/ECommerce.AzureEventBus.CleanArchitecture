@@ -1,6 +1,6 @@
 ﻿namespace Ecommerce.Catalog.Infrastructure.Options;
 
-public class PostgreOptions
+public class PostgresOptions
 {
     public const string SECTION = "Postgres";
 
