@@ -1,11 +1,13 @@
-﻿namespace Ecommerce.Catalog.Application.Notifications.Product.CreateProduct;
+﻿using Ecommerce.EventBus.Events;
 
-public class CreateProductEventHandler : IIntegrationEventHandler<CreateProductNotification>
+namespace Ecommerce.Catalog.Application.Notifications.Product.CreateProduct;
+
+public class CreateProductEventHandler : IIntegrationEventHandler<CreateProductEvent>
 {
     public CreateProductEventHandler()
     {
     }
 
-    public async Task Handle(CreateProductNotification notification)
+    public async Task Handle(CreateProductEvent notification)
         => await Task.CompletedTask;
 }

@@ -2,6 +2,7 @@
 using Ecommerce.Catalog.Application.Repositories;
 using Ecommerce.Catalog.Application.Security;
 using Ecommerce.Catalog.Core.Extension;
+using Ecommerce.EventBus.Events;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -66,7 +67,7 @@ public class UpdateProductHandler : IAppRequestHandler<UpdateProductRequest, Res
         productToUpdate.Name = resultEntityProduct.Value.Name;
 
         await _eventBus.PublishAsync(
-            new UpdateProductNotification
+            new UpdateProductEvent
             {
                 Id = productToUpdate.Id,
             });

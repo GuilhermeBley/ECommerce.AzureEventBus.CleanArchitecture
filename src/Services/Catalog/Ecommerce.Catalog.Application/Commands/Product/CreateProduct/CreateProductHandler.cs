@@ -3,6 +3,7 @@ using Ecommerce.Catalog.Application.Model.Product;
 using Ecommerce.Catalog.Application.Notifications.Product.CreateProduct;
 using Ecommerce.Catalog.Application.Repositories;
 using Ecommerce.Catalog.Application.Security;
+using Ecommerce.EventBus.Events;
 using System.Security.Claims;
 
 namespace Ecommerce.Catalog.Application.Commands.Product.CreateProduct;
@@ -62,7 +63,7 @@ public class CreateProductHandler : IAppRequestHandler<CreateProductRequest, Res
         var companyModel = Map(resultCompany.Value);
         await _catalogContext.CompanyProducts.AddAsync(companyModel);
 
-        await _eventBus.PublishAsync(new CreateProductNotification { Id = productModel.Id });
+        await _eventBus.PublishAsync(new CreateProductEvent { Id = productModel.Id });
 
         await _catalogContext.SaveChangesAsync();
         await transaction.CommitAsync();

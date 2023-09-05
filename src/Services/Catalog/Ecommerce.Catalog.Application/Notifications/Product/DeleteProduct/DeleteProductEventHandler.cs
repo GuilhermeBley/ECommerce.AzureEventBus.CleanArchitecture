@@ -1,11 +1,13 @@
-﻿namespace Ecommerce.Catalog.Application.Notifications.Product.DeleteProduct;
+﻿using Ecommerce.EventBus.Events;
 
-public class DeleteProductEventHandler : IIntegrationEventHandler<DeleteProductNotification>
+namespace Ecommerce.Catalog.Application.Notifications.Product.DeleteProduct;
+
+public class DeleteProductEventHandler : IIntegrationEventHandler<DeleteProductEvent>
 {
     public DeleteProductEventHandler()
     {
     }
 
-    public async Task Handle(DeleteProductNotification notification)
+    public async Task Handle(DeleteProductEvent notification)
         =>  await Task.CompletedTask;
 }
