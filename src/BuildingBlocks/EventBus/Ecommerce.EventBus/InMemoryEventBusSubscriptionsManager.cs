@@ -1,11 +1,13 @@
 ﻿using Ecommerce.EventBus.Abstractions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Ecommerce.EventBus;
 
 public partial class InMemoryEventBusSubscriptionsManager : IEventBusSubscriptionsManager
 {
+    private static readonly EventEqualityComparer _eventEqualityComparer = new EventEqualityComparer();
     private readonly Dictionary<string, List<SubscriptionInfo>> _handlers
-         = new Dictionary<string, List<SubscriptionInfo>>();
+         = new Dictionary<string, List<SubscriptionInfo>>(_eventEqualityComparer);
     private readonly List<Type> _eventTypes = new List<Type>();
 
     public event EventHandler<string> OnEventRemoved = null!;
@@ -150,5 +152,14 @@ public partial class InMemoryEventBusSubscriptionsManager : IEventBusSubscriptio
     public string GetEventKey<T>()
     {
         return typeof(T).Name;
+    }
+
+    private class EventEqualityComparer : IEqualityComparer<string>
+    {
+        public bool Equals(string? x, string? y)
+            => string.Equals(x, y, StringComparison.OrdinalIgnoreCase);
+
+        public int GetHashCode([DisallowNull] string obj)
+            => obj.GetHashCode(StringComparison.OrdinalIgnoreCase);
     }
 }
