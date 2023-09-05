@@ -3,6 +3,7 @@ using Ecommerce.Catalog.Application.Notifications.Product.DeleteProduct;
 using Ecommerce.Catalog.Application.Repositories;
 using Ecommerce.Catalog.Application.Security;
 using Ecommerce.Catalog.Core.Extension;
+using Ecommerce.EventBus.Events;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -50,7 +51,7 @@ public class DeleteProductHandler : IAppRequestHandler<DeleteProductRequest, Res
 
         _catalogContext.Products.Remove(product);
 
-        await _eventBus.PublishAsync(new DeleteProductNotification
+        await _eventBus.PublishAsync(new DeleteProductEvent
         { 
             Id = product.Id,
             Name = product.Name,
