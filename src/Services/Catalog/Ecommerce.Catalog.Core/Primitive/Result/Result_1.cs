@@ -20,7 +20,7 @@ public class Result
     internal Result(IEnumerable<ICoreError> errors)
     {
         Errors = errors.ToList().AsReadOnly();
-        IsSuccess = Errors.Any();
+        IsSuccess = !Errors.Any();
     }
 
     public static Result Failed(ICoreError error)
