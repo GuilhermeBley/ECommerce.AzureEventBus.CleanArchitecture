@@ -1,8 +1,10 @@
 ﻿using Ecommerce.Catalog.Application.Mediator;
 using MediatR;
+using System.Diagnostics;
 
 namespace Ecommerce.Catalog.Infrastructure.Mediator;
 
+[DebuggerNonUserCode]
 internal class RequestHandlerAdapter<TRequest, TResponse> 
     : IRequestHandler<RequestAdapter<TRequest, TResponse>, TResponse>
 {
