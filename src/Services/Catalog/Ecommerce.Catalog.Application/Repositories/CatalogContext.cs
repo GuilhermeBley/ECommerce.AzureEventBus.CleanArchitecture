@@ -14,7 +14,7 @@ public class CatalogContext : DbContext
     public DbSet<UserClaimModel> UserClaims { get; set; } = null!;
     public DbSet<RoleUserClaimModel> RoleUsersClaims { get; set; } = null!;
     public DbSet<ProductModel> Products { get; set; } = null!;
-    public DbSet<CompanyModel> Companies { get; } = null!;
-    public DbSet<CompanyUserClaimModel> CompanyUsersClaims { get; } = null!;
-    public DbSet<CompanyProductModel> CompanyProducts { get; } = null!;
+    public DbSet<CompanyModel> Companies { get; set; } = null!;
+    public DbSet<CompanyUserClaimModel> CompanyUsersClaims { get; set; } = null!;
+    public DbSet<CompanyProductModel> CompanyProducts { get; set; } = null!;
 }
