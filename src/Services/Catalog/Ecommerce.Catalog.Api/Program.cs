@@ -18,7 +18,12 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddEventBus();
+builder.Services.AddEventBus((provider, eventBus) =>
+{
+    eventBus.Subscribe<Ecommerce.EventBus.Events.CreateProductEvent, Ecommerce.Catalog.Application.Notifications.Product.CreateProduct.CreateProductEventHandler>();
+    eventBus.Subscribe<Ecommerce.EventBus.Events.DeleteProductEvent, Ecommerce.Catalog.Application.Notifications.Product.DeleteProduct.DeleteProductEventHandler>();
+    eventBus.Subscribe<Ecommerce.EventBus.Events.UpdateProductEvent, Ecommerce.Catalog.Application.Notifications.Product.UpdateProduct.UpdateProductEventHandler>();
+});
 
 builder.Services.AddInfrastructure();
 
