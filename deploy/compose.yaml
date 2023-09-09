@@ -1,4 +1,6 @@
 services:
+  catalog:
+    container_name: catalog
   postgres:
     container_name: postgres
     image: postgres:latest
