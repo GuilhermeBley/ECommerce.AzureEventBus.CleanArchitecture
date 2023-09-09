@@ -1,6 +1,7 @@
 services:
   catalog:
-    container_name: catalog
+    build:
+        dockerfile: ../src/Services/Catalog/Ecommerce.Catalog.Api/DockerFile
   postgres:
     container_name: postgres
     image: postgres:latest
