@@ -1,6 +1,4 @@
-﻿using Ecommerce.Catalog.Core.Entities.Identity;
-
-namespace Ecommerce.Catalog.Core.Entities.Company;
+﻿namespace Ecommerce.Identity.Core.Entities;
 
 public class CompanyUserClaim : ClaimEntity
 {
