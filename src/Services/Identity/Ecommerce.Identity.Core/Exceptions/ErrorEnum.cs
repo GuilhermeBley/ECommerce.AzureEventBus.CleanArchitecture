@@ -7,4 +7,6 @@ public enum ErrorEnum
     InvalidCompanyName = 400,
     InvalidCompanyUpdateAt = 400,
     InvalidCompanyCreatedAt = 400,
+    InvalidClaimType = 400,
+    InvalidClaimValue = 400,
 }
