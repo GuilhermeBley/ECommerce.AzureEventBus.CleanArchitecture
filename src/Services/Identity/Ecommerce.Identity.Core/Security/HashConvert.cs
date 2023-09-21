@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Ecommerce.Catalog.Core.Security;
+namespace Ecommerce.Identity.Core.Security;
 
 public class HashConvert
 {
