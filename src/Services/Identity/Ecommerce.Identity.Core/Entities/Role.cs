@@ -1,4 +1,4 @@
-﻿namespace Ecommerce.Catalog.Core.Entities.Identity;
+﻿namespace Ecommerce.Identity.Core.Entities.Identity;
 
 public class Role
 {

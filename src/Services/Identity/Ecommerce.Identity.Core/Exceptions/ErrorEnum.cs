@@ -9,4 +9,5 @@ public enum ErrorEnum
     InvalidCompanyCreatedAt = 400,
     InvalidClaimType = 400,
     InvalidClaimValue = 400,
+    InvalidRoleName = 400,
 }
