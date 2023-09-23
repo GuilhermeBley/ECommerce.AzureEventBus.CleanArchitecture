@@ -1,6 +1,6 @@
 ﻿namespace Ecommerce.Identity.Application.Model;
 
-public class CompanyUserClaim
+public class CompanyUserClaimModel
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
