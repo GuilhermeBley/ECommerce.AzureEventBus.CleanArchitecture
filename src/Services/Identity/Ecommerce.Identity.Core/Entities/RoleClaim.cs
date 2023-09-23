@@ -1,4 +1,4 @@
-﻿namespace Ecommerce.Identity.Core.Entities.Identity;
+﻿namespace Ecommerce.Identity.Core.Entities;
 
 internal class RoleClaim : ClaimEntity
 {

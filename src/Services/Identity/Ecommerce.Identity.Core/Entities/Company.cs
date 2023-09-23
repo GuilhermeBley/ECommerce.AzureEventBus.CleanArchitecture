@@ -1,4 +1,4 @@
-﻿namespace Ecommerce.Identity.Core.Entities.Company;
+﻿namespace Ecommerce.Identity.Core.Entities;
 
 public class Company : Entity
 {
