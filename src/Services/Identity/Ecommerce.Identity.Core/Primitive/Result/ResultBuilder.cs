@@ -33,9 +33,6 @@ public sealed class ResultBuilder<TResult> : ResultBuilder
 
     public Result<TResult> Success(TResult result)
     {
-        if (result is null)
-            throw new ArgumentNullException("result");
-
         if (HasError)
             throw new InvalidOperationException("There aren't errors.");
 
@@ -136,6 +133,11 @@ public class ResultBuilder
 
     public void Add(string message, int code = DEFAULT_CODE)
         => _errors.Add(new Error(code, message));
+
+    public void AddRange(params ICoreError[] values)
+        => _errors.AddRange(values);
+    public void AddRange(IEnumerable<ICoreError> values)
+        => _errors.AddRange(values);
 
     public void AddRange(params (string Message, int Code)[] values)
         => _errors.AddRange(values.Select(value => new Error(value.Code, value.Message)));
