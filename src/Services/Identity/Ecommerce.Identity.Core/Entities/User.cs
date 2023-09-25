@@ -115,7 +115,7 @@ public class User
 
         var hashedPassword = Security.HashConvert.CreateHashedPassword(password);
 
-        var result = Create(
+        var result = CreateWithHashedPassword(
             id: id,
             email: email,
             name: name,
@@ -137,7 +137,7 @@ public class User
         return result;
     }
 
-    public static Result<User> Create(
+    public static Result<User> CreateWithHashedPassword(
         Guid id,
         string email,
         string name,
