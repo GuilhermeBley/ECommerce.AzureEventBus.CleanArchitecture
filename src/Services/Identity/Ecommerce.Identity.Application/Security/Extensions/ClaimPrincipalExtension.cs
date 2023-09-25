@@ -7,6 +7,25 @@ namespace Ecommerce.Identity.Application.Security.Extensions;
 
 internal static class ClaimPrincipalExtension
 {
+    public static Result<Guid> GetUserId(this ClaimsPrincipal claimsPrincipal)
+    {
+        var claimFound = GetClaimValue(claimsPrincipal, ClaimTypeCore.DEFAULT_ID);
+
+        if (!claimFound.TryGetValue(out string? textGuid))
+        {
+            return ResultBuilderExtension.CreateFailed<Guid>(ErrorEnum.Unauthorized);
+        }
+
+        var isGuid = Guid.TryParse(textGuid, out Guid userId);
+
+        if (!isGuid)
+        {
+            return ResultBuilderExtension.CreateFailed<Guid>(ErrorEnum.Unauthorized);
+        }
+
+        return Result<Guid>.Success(userId);
+    }
+
     public static Result<Guid> GetCompany(this ClaimsPrincipal claimsPrincipal)
     {
         if (IsLogged(claimsPrincipal).IsFailure)
