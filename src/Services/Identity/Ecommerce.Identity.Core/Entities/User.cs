@@ -1,9 +1,12 @@
-﻿namespace Ecommerce.Identity.Core.Entities;
+﻿using Ecommerce.Identity.Core.Security;
+
+namespace Ecommerce.Identity.Core.Entities;
 
 public class User
 {
     public const string ALLOWED_PASSWORD 
         = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 " + "!@#$%¨&*()_+-=";
+    public const int MIN_COUNT_ACCESS_FAILED = 0;
 
     public Guid Id { get; private set; }
     public string Email { get; private set; }
@@ -97,6 +100,22 @@ public class User
         return hash.ToHashCode();
     }
 
+
+    /// <summary>
+    /// Try reset account failed
+    /// </summary>
+    /// <returns>If already reseted, return false.</returns>
+    public bool TryResetAcessFailedAccount()
+    {
+        if (AccessFailedCount == MIN_COUNT_ACCESS_FAILED &&
+            LockOutEnd is null)
+            return false;
+
+        AccessFailedCount = MIN_COUNT_ACCESS_FAILED;
+        LockOutEnd = null;
+        return true;
+    }
+
     public static Result<User> Create(
         Guid id,
         string email,
@@ -176,6 +195,17 @@ public class User
             phoneNumberConfirmed: phoneNumberConfirmed, twoFactoryEnabled: twoFactoryEnabled,
             lockOutEnd: lockOutEnd, lockOutEnabled: lockOutEnabled, accessFailedCount: accessFailedCount)
         );
+    }
+
+    public static Result IsValidEncryption(string password, string hash, string salt)
+    {
+        ResultBuilder resultBuilder = new ResultBuilder();
+
+        resultBuilder.AddIf(
+            !HashConvert.IsValidPassword(password, hash, salt),
+            ErrorEnum.InvalidPassword);
+
+        return resultBuilder.GetResult();
     }
 
     public static Result IsValidPassword(string password)

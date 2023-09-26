@@ -2,7 +2,7 @@
 
 namespace Ecommerce.Identity.Core.Security;
 
-public class HashConvert
+internal class HashConvert
 {
     public static HashedPassword CreateHashedPassword(string password)
     {
