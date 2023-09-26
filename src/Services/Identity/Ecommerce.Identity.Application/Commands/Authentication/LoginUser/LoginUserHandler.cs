@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Identity.Application.Mediator;
 using Ecommerce.Identity.Application.Repositories;
+using Ecommerce.Identity.Application.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Identity.Application.Commands.Authentication.LoginUser;
@@ -8,10 +9,14 @@ public class LoginUserHandler
     : IAppRequestHandler<LoginUserRequest, Result<LoginUserResponse>>
 {
     private readonly IdentityContext _identityContext;
+    private readonly ITokenProvider _tokenProvider;
 
-    public LoginUserHandler(IdentityContext identityContext)
+    public LoginUserHandler(
+        IdentityContext identityContext,
+        ITokenProvider tokenProvider)
     {
         _identityContext = identityContext;
+        _tokenProvider = tokenProvider;
     }
 
     public async Task<Result<LoginUserResponse>> Handle(LoginUserRequest request, CancellationToken cancellationToken)
@@ -39,6 +44,10 @@ public class LoginUserHandler
 
         if (Core.Entities.User.IsValidEncryption(request.Password, userFound.PasswordHash, userFound.PasswordSalt).IsFailure)
             return unauthorizedResult;
+
+        var;
+
+        var tokenGenerated = _tokenProvider.CreateTokenAsync();
 
         return Result<LoginUserResponse>.Success(new LoginUserResponse
         {
