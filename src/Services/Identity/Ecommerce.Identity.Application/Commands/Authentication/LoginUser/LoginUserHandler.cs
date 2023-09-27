@@ -2,6 +2,7 @@
 using Ecommerce.Identity.Application.Repositories;
 using Ecommerce.Identity.Application.Security;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Ecommerce.Identity.Application.Commands.Authentication.LoginUser;
 
@@ -45,7 +46,10 @@ public class LoginUserHandler
         if (Core.Entities.User.IsValidEncryption(request.Password, userFound.PasswordHash, userFound.PasswordSalt).IsFailure)
             return unauthorizedResult;
 
-        var;
+        var userClaims = await GetAllClaimsFromUserAsync(userFound.Id, cancellationToken);
+
+        if (!userClaims.Any())
+            return unauthorizedResult;
 
         var tokenGenerated = _tokenProvider.CreateTokenAsync();
 
@@ -57,4 +61,41 @@ public class LoginUserHandler
             Token = string.Empty,
         });
     }
+
+    public async Task<Claim[]> GetAllClaimsFromUserAsync(Guid? userId, CancellationToken cancellationToken = default)
+    {
+        if (userId is null)
+            return Array.Empty<Claim>();
+
+        var userRoleClaims = await 
+            (from role in _identityContext.Roles
+             join roleUser in _identityContext.RoleUsersClaims
+                on role.Id equals roleUser.RoleId
+            join claim in _identityContext.RoleClaims
+                on role.Id equals claim.IdRole
+            where roleUser.Id == userId
+            select new Claim(claim.ClaimType, claim.ClaimValue))
+            .ToListAsync();
+
+        var userClaims = await
+            (from userClaim in _identityContext.UserClaims
+             where userClaim.UserId == userId
+             select new Claim(userClaim.ClaimType, userClaim.ClaimValue))
+             .ToListAsync();
+
+        var nonDuplicatedValues = new Dictionary<string, Claim>();
+
+        userClaims.ForEach(claim => nonDuplicatedValues.TryAdd(
+            string.Concat(claim.Type, "-", claim.Value),
+            claim
+        ));
+
+        userRoleClaims.ForEach(claim => nonDuplicatedValues.TryAdd(
+            string.Concat(claim.Type, "-", claim.Value),
+            claim
+        ));
+
+        return nonDuplicatedValues.Values.ToArray();
+    }
 }
+
