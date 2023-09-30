@@ -2,6 +2,7 @@
 using Ecommerce.Identity.Application.Repositories;
 using Ecommerce.Identity.Application.Security;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 
 namespace Ecommerce.Identity.Application.Commands.Authentication.LoginUser;
@@ -51,14 +52,14 @@ public class LoginUserHandler
         if (!userClaims.Any())
             return unauthorizedResult;
 
-        var tokenGenerated = _tokenProvider.CreateTokenAsync();
+        var tokenGenerated = await _tokenProvider.CreateTokenAsync(userClaims, cancellationToken: cancellationToken);
 
         return Result<LoginUserResponse>.Success(new LoginUserResponse
         {
             Email = userFound.Email,
             Id = userFound.Id,
             Name = userFound.Name,
-            Token = string.Empty,
+            Token = tokenGenerated,
         });
     }
 
