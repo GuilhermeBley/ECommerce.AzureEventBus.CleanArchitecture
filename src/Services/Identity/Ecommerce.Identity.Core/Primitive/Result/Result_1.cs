@@ -1,3 +1,5 @@
+using static Ecommerce.Identity.Core.Primitive.Result.ResultBuilder;
+
 namespace Ecommerce.Identity.Core.Primitive.Result;
 
 public class Result
