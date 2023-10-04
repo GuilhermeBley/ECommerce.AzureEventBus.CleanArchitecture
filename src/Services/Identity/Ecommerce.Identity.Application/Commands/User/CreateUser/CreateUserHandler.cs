@@ -16,11 +16,6 @@ public class CreateUserHandler : IAppRequestHandler<CreateUserRequest, Result<Cr
 
     public async Task<Result<CreateUserResponse>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
-        var userByEmail = await _identityContext.Users.FirstOrDefaultAsync(u => u.Email.ToUpperInvariant() == request.Email.ToUpperInvariant());
-
-        if (userByEmail is not null)
-            return ResultBuilderExtension.CreateFailed<CreateUserResponse>(ErrorEnum.ConflicUser);
-
         var resultUser = Core.Entities.User.Create(
             id: Guid.NewGuid(), email: request.Email, name: request.Name,
             nickName: request.NickName, password: request.Password,
@@ -29,6 +24,13 @@ public class CreateUserHandler : IAppRequestHandler<CreateUserRequest, Result<Cr
 
         if (!resultUser.TryGetValue(out var user))
             return Result<CreateUserResponse>.Failed(resultUser);
+
+        await using var transaction = await _identityContext.Database.BeginTransactionAsync(cancellationToken);
+
+        var userByEmail = await _identityContext.Users.FirstOrDefaultAsync(u => u.Email.ToUpperInvariant() == request.Email.ToUpperInvariant());
+
+        if (userByEmail is not null)
+            return ResultBuilderExtension.CreateFailed<CreateUserResponse>(ErrorEnum.ConflicUser);
 
         var userEntry = await _identityContext.Users.AddAsync(new Model.UserModel
         {
@@ -47,6 +49,7 @@ public class CreateUserHandler : IAppRequestHandler<CreateUserRequest, Result<Cr
             TwoFactoryEnabled = user.TwoFactoryEnabled,
         }, cancellationToken);
 
+        await transaction.CommitAsync();
         await _identityContext.SaveChangesAsync();
 
         return Result.Success(new CreateUserResponse
