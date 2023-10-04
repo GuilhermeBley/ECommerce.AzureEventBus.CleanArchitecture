@@ -16,5 +16,6 @@ public enum ErrorEnum
     InvalidNickName = 400,
     InvalidPassword = 400,
     InvalidPhoneNumber = 400,
-    UserNotFound = 404
+    UserNotFound = 404,
+    ConflicUser = 409
 }

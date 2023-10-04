@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Identity.Application.Mediator;
 using Ecommerce.Identity.Application.Repositories;
 using Ecommerce.Identity.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Identity.Application.Commands.User.CreateUser;
 
@@ -15,6 +16,11 @@ public class CreateUserHandler : IAppRequestHandler<CreateUserRequest, Result<Cr
 
     public async Task<Result<CreateUserResponse>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
+        var userByEmail = await _identityContext.Users.FirstOrDefaultAsync(u => u.Email.ToUpperInvariant() == request.Email.ToUpperInvariant());
+
+        if (userByEmail is not null)
+            return ResultBuilderExtension.CreateFailed<CreateUserResponse>(ErrorEnum.ConflicUser);
+
         var resultUser = Core.Entities.User.Create(
             id: Guid.NewGuid(), email: request.Email, name: request.Name,
             nickName: request.NickName, password: request.Password,
