@@ -8,13 +8,15 @@ public class Company : Entity
 
     public Guid Id { get; private set; }
     public string Name { get; private set; } = string.Empty;
+    public bool Disabled { get; private set; } = false;
     public DateTime? UpdateAt { get; private set; }
     public DateTime CreateAt { get; private set; }
 
-    private Company(Guid id, string name, DateTime? updateAt, DateTime createAt)
+    public Company(Guid id, string name, bool disabled, DateTime? updateAt, DateTime createAt)
     {
         Id = id;
         Name = name;
+        Disabled = disabled;
         UpdateAt = updateAt;
         CreateAt = createAt;
     }
@@ -25,16 +27,17 @@ public class Company : Entity
                IdEntity.Equals(company.IdEntity) &&
                Id.Equals(company.Id) &&
                Name == company.Name &&
+               Disabled == company.Disabled &&
                UpdateAt == company.UpdateAt &&
                CreateAt == company.CreateAt;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(IdEntity, Id, Name, UpdateAt, CreateAt);
+        return HashCode.Combine(IdEntity, Id, Name, Disabled, UpdateAt, CreateAt);
     }
 
-    public static Result<Company> Create(Guid id, string name, DateTime updateAt, DateTime createAt)
+    public static Result<Company> Create(Guid id, string name, DateTime updateAt, DateTime createAt, bool disabled = false)
     {
         ResultBuilder<Company> resultBuilder = new();
 
@@ -60,7 +63,7 @@ public class Company : Entity
             return result;
 
         return resultBuilder.Success(
-            new Company(id, name!, updateAt, createAt)    
+            new Company(id, name!, disabled, updateAt, createAt)
         );
     }
 }
