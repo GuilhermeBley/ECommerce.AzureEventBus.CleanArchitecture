@@ -20,21 +20,22 @@ public class GetAllCompaniesFromUserHandler
 
     public async Task<Result<GetAllCompaniesFromUserResponse>> Handle(GetAllCompaniesFromUserRequest request, CancellationToken cancellationToken)
     {
-        var companyId = (await _claimProvider.GetCurrentAsync())?.GetCompany();
+        var userId = (await _claimProvider.GetCurrentAsync())?.GetUserId();
 
-        if (companyId is null)
+        if (userId is null)
             return ResultBuilderExtension.CreateFailed<GetAllCompaniesFromUserResponse>(ErrorEnum.Unauthorized);
 
         var queryOnlyActivatedCompanies =
-            _identityContext.Companies
-                .Where(c => !c.Disabled)
-                .Where(c => c.Id == companyId.Value)
-                .Select(c => new GetAllCompaniesFromUserResponse.CompanyResponse
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    UpdateAt = c.UpdateAt
-                });
+            from company in _identityContext.Companies
+            join userCompany in _identityContext.CompanyUsersClaims
+                on company.Id equals userCompany.CompanyId
+            where !company.Disabled
+            select new GetAllCompaniesFromUserResponse.CompanyResponse
+            {
+                Id = company.Id,
+                Name = company.Name,
+                UpdateAt = company.UpdateAt
+            };
 
         return await Task.FromResult(
             Result.Success(
