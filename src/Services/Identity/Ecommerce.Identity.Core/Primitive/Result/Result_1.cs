@@ -33,6 +33,8 @@ public class Result
 
     public static Result Success()
         => new(Array.Empty<ICoreError>());
+    public static Result<T> Success<T>()
+        => Success<T>(default);
     public static Result<T> Success<T>(T? item)
         => Result<T>.Success(item);
 
