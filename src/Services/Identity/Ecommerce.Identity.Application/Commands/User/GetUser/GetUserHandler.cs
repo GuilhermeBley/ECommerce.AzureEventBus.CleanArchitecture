@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Ecommerce.Identity.Application.Commands.User.GetUser;
 
 public class GetUserHandler
-    : IAppRequestHandler<GetUserRequest, Result<GetUserResponse?>>
+    : IAppRequestHandler<GetUserRequest, Result<GetUserResponse>>
 {
     private readonly IClaimProvider _claimProvider;
     private readonly IdentityContext _identityContext;
@@ -17,17 +17,23 @@ public class GetUserHandler
         _identityContext = identityContext;
     }
 
-    public async Task<Result<GetUserResponse?>> Handle(GetUserRequest request, CancellationToken cancellationToken)
+    public async Task<Result<GetUserResponse>> Handle(GetUserRequest request, CancellationToken cancellationToken)
     {
         var userId = (await _claimProvider.GetCurrentAsync())?.GetUserId();
+
+        if (userId is null)
+            return ResultBuilderExtension.CreateFailed<GetUserResponse>(ErrorEnum.Unauthorized);
 
         var userFound = await _identityContext.Users
             .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
 
         if (userFound is null)
-            return Result.Success<GetUserResponse?>();
+            return ResultBuilderExtension.CreateFailed<GetUserResponse>(ErrorEnum.NoContent);
 
-        return Result.Success<GetUserResponse?>(
+        if (userFound is null)
+            return Result.Success<GetUserResponse>();
+
+        return Result.Success<GetUserResponse>(
             new GetUserResponse
             {
                 Email = userFound.Email,

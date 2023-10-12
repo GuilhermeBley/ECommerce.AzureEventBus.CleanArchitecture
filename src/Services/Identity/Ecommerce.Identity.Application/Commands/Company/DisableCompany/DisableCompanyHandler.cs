@@ -20,9 +20,6 @@ public class DisableCompanyHandler
             await _identityContext.Companies.FirstOrDefaultAsync(c => c.Id == request.CompanyId);
 
         if (companyFound is null)
-            return ResultBuilderExtension.CreateFailed<DisableCompanyResponse>(ErrorEnum.Unauthorized);
-
-        if (companyFound is null)
             return ResultBuilderExtension.CreateFailed<DisableCompanyResponse>(ErrorEnum.CompanyNotFound);
 
         companyFound.Disabled = true;
