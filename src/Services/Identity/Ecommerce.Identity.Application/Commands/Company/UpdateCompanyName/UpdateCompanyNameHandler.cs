@@ -1,4 +1,6 @@
-﻿using Ecommerce.Identity.Application.Mediator;
+﻿using Ecommerce.EventBus.Abstractions;
+using Ecommerce.EventBus.Events;
+using Ecommerce.Identity.Application.Mediator;
 using Ecommerce.Identity.Application.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,10 +8,14 @@ namespace Ecommerce.Identity.Application.Commands.Company.UpdateCompanyName;
 
 public class UpdateCompanyNameHandler : IAppRequestHandler<UpdateCompanyNameRequest, Result<UpdateCompanyNameResponse>>
 {
+    private readonly IEventBus _eventBus;
     private readonly IdentityContext _identityContext;
 
-    public UpdateCompanyNameHandler(IdentityContext identityContext)
+    public UpdateCompanyNameHandler(
+        IEventBus eventBus,
+        IdentityContext identityContext)
     {
+        _eventBus = eventBus;
         _identityContext = identityContext;
     }
 
@@ -34,6 +40,14 @@ public class UpdateCompanyNameHandler : IAppRequestHandler<UpdateCompanyNameRequ
         companyFound.Name = companyEntity.Name;
 
         await _identityContext.SaveChangesAsync();
+
+        await _eventBus.PublishAsync(new CompanyUpdatedEvent
+        {
+            CreateAt = companyFound.CreateAt,
+            UpdateAt = companyFound.UpdateAt ?? DateTime.UtcNow,
+            Id = companyFound.Id,
+            Name = companyFound.Name,
+        });
 
         return Result<UpdateCompanyNameResponse>.Success(
             new UpdateCompanyNameResponse

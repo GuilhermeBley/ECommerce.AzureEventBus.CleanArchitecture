@@ -1,4 +1,6 @@
-﻿using Ecommerce.Identity.Application.Mediator;
+﻿using Ecommerce.EventBus.Abstractions;
+using Ecommerce.EventBus.Events;
+using Ecommerce.Identity.Application.Mediator;
 using Ecommerce.Identity.Application.Repositories;
 using Ecommerce.Identity.Core.Entities;
 
@@ -6,10 +8,14 @@ namespace Ecommerce.Identity.Application.Commands.Company.CreateCompany;
 
 public class CreateCompanyHandler : IAppRequestHandler<CreateCompanyRequest, Result<CreateCompanyResponse>>
 {
+    private readonly IEventBus _eventBus;
     private readonly IdentityContext _identityContext;
 
-    public CreateCompanyHandler(IdentityContext identityContext)
+    public CreateCompanyHandler(
+        IEventBus eventBus,
+        IdentityContext identityContext)
     {
+        _eventBus = eventBus;
         _identityContext = identityContext;
     }
 
@@ -36,6 +42,14 @@ public class CreateCompanyHandler : IAppRequestHandler<CreateCompanyRequest, Res
         );
 
         await _identityContext.SaveChangesAsync();
+
+        await _eventBus.PublishAsync(new CompanyCreatedEvent
+        {
+            Name = companyEntity.Name,
+            Id = companyEntity.Id,
+            CreateAt = companyEntity.CreateAt,
+            UpdateAt = companyEntity.UpdateAt ?? DateTime.UtcNow,
+        });
 
         return Result<CreateCompanyResponse>.Success(
             new CreateCompanyResponse
