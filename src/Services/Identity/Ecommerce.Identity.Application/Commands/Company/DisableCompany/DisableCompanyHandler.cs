@@ -1,4 +1,6 @@
-﻿using Ecommerce.Identity.Application.Mediator;
+﻿using Ecommerce.EventBus.Abstractions;
+using Ecommerce.EventBus.Events;
+using Ecommerce.Identity.Application.Mediator;
 using Ecommerce.Identity.Application.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,10 +9,14 @@ namespace Ecommerce.Identity.Application.Commands.Company.DisableCompany;
 public class DisableCompanyHandler
     : IAppRequestHandler<DisableCompanyRequest, Result<DisableCompanyResponse>>
 {
+    private readonly IEventBus _eventBus;
     private readonly IdentityContext _identityContext;
 
-    public DisableCompanyHandler(IdentityContext identityContext)
+    public DisableCompanyHandler(
+        IEventBus eventBus,
+        IdentityContext identityContext)
     {
+        _eventBus = eventBus;
         _identityContext = identityContext;
     }
 
@@ -26,6 +32,14 @@ public class DisableCompanyHandler
         companyFound.UpdateAt = DateTime.UtcNow;
 
         await _identityContext.SaveChangesAsync(cancellationToken);
+
+        await _eventBus.PublishAsync(new CompanyDisabledEvent
+        {
+            CreateAt = companyFound.CreateAt,
+            Name = companyFound.Name,
+            Id = companyFound.Id,
+            UpdateAt = companyFound.UpdateAt.Value,
+        });
 
         return Result.Success(new DisableCompanyResponse
         {
