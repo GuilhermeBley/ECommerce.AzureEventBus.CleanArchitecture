@@ -1,4 +1,6 @@
-﻿using Ecommerce.Identity.Application.Mediator;
+﻿using Ecommerce.EventBus.Abstractions;
+using Ecommerce.EventBus.Events;
+using Ecommerce.Identity.Application.Mediator;
 using Ecommerce.Identity.Application.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,10 +9,14 @@ namespace Ecommerce.Identity.Application.Commands.Authentication.ResendEmailConf
 public class ResendEmailConfirmationHandler
     : IAppRequestHandler<ResendEmailConfirmationRequest, Result<ResendEmailConfirmationResponse>>
 {
+    private readonly IEventBus _eventBus;
     private readonly IdentityContext _identityContext;
 
-    public ResendEmailConfirmationHandler(IdentityContext identityContext)
+    public ResendEmailConfirmationHandler(
+        IEventBus eventBus,
+        IdentityContext identityContext)
     {
+        _eventBus = eventBus;
         _identityContext = identityContext;
     }
 
@@ -28,8 +34,13 @@ public class ResendEmailConfirmationHandler
             result.EmailSent = false;
             return Result.Success(result);
         }
-
+        
         result.EmailSent = true;
+
+        await _eventBus.PublishAsync(new ResendConfirmationUserCreatedEvent
+        {
+            EmailSentId = result.EmailSentId
+        });
 
         return Result.Success(result);
     }
