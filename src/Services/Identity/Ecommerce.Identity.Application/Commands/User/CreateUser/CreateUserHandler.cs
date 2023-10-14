@@ -1,4 +1,6 @@
-﻿using Ecommerce.Identity.Application.Mediator;
+﻿using Ecommerce.EventBus.Abstractions;
+using Ecommerce.EventBus.Events;
+using Ecommerce.Identity.Application.Mediator;
 using Ecommerce.Identity.Application.Repositories;
 using Ecommerce.Identity.Core.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -7,10 +9,14 @@ namespace Ecommerce.Identity.Application.Commands.User.CreateUser;
 
 public class CreateUserHandler : IAppRequestHandler<CreateUserRequest, Result<CreateUserResponse>>
 {
+    private readonly IEventBus _eventBus;
     private readonly IdentityContext _identityContext;
 
-    public CreateUserHandler(IdentityContext identityContext)
+    public CreateUserHandler(
+        IEventBus eventBus,
+        IdentityContext identityContext)
     {
+        _eventBus = eventBus;
         _identityContext = identityContext;
     }
 
@@ -51,6 +57,14 @@ public class CreateUserHandler : IAppRequestHandler<CreateUserRequest, Result<Cr
 
         await transaction.CommitAsync();
         await _identityContext.SaveChangesAsync();
+
+        await _eventBus.PublishAsync(new CreateUserEvent
+        {
+            Email = user.Email,
+            Id = user.Id,
+            Name = user.Name,
+            NickName = user.NickName
+        });
 
         return Result.Success(new CreateUserResponse
         {
