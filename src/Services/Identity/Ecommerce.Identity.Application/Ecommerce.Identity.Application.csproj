@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ecommerce.Identity.Core\Ecommerce.Identity.Core.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\ECommerce.EventBus\ECommerce.EventBus.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
