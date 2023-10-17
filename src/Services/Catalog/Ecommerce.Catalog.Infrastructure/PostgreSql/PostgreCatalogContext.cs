@@ -34,39 +34,6 @@ public class PostgreCatalogContext : CatalogContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Application.Model.Identity.RoleClaimModel>(builder =>
-        {
-            builder.HasKey(x => x.IdClaim);
-            builder
-                .HasOne<RoleModel>()
-                .WithMany()
-                .HasForeignKey(x => x.IdRole);
-        });
-
-        modelBuilder.Entity<Model.Identity.RoleDbModel>(builder =>
-        {
-            builder.HasKey(x => x.Id);
-            builder.HasIndex(x => x.NormalizedName).IsUnique();
-        });
-
-        modelBuilder.Entity<Application.Model.Identity.RoleUserClaimModel>(builder =>
-        {
-            builder.HasKey(x => x.Id);
-            builder
-                .HasOne<UserModel>()
-                .WithMany()
-                .HasForeignKey(x => x.UserId);
-        });
-
-        modelBuilder.Entity<Application.Model.Identity.UserClaimModel>(builder =>
-        {
-            builder.HasKey(x => x.IdClaim);
-            builder
-                .HasOne<UserModel>()
-                .WithMany()
-                .HasForeignKey(x => x.UserId);
-        });
-
         modelBuilder.Entity<Application.Model.Identity.UserModel>(builder =>
         {
             builder.HasKey(x => x.Id);
