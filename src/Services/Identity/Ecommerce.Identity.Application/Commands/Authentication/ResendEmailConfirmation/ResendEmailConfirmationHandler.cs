@@ -20,7 +20,7 @@ public class ResendEmailConfirmationHandler
         _identityContext = identityContext;
     }
 
-    public async Task<Result<ResendEmailConfirmationResponse>> IAppRequestHandler<ResendEmailConfirmationRequest, Result<ResendEmailConfirmationResponse>>.Handle(ResendEmailConfirmationRequest request, CancellationToken cancellationToken)
+    public async Task<Result<ResendEmailConfirmationResponse>> Handle(ResendEmailConfirmationRequest request, CancellationToken cancellationToken)
     {
         var userFound = await _identityContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
 
