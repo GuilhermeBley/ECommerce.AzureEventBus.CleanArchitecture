@@ -8,11 +8,9 @@ namespace Ecommerce.Identity.Infrastructure.Extension.Di;
 public static class DependencyInjection
 {
     public static IServiceCollection AddMySqlContext(this IServiceCollection services)
-    {
-        services.AddDbContext<Context.MySqlDbContext>();
-
-        return services;
-    }
+        => services
+            .AddApplicationContext()
+            .AddApplicationMediator();
 
     public static IServiceCollection AddApplicationMediator(this IServiceCollection serviceDescriptors)
         => serviceDescriptors
@@ -20,4 +18,9 @@ public static class DependencyInjection
         .AddSingleton<IAppMediator, MediatRAdapter>()
         .AddTransient(typeof(IRequestHandler<,>), typeof(RequestHandlerAdapter<,>))
         .AddTransient(typeof(INotificationHandler<>), typeof(NotificationHandlerAdapter<>));
+
+    private static IServiceCollection AddApplicationContext(this IServiceCollection serviceDescriptors)
+        => serviceDescriptors
+        .AddDbContext<Context.MySqlDbContext>()
+        .AddScoped<Application.Repositories.IdentityContext>(provider => provider.GetRequiredService<Context.MySqlDbContext>());
 }

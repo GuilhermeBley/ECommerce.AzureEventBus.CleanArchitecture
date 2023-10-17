@@ -1,11 +1,34 @@
 ﻿using Ecommerce.Identity.Application.Model;
 using Ecommerce.Identity.Application.Repositories;
+using Ecommerce.Identity.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Ecommerce.Identity.Infrastructure.Context;
 
 public class MySqlDbContext : IdentityContext
 {
+    private readonly IOptions<MySqlOptions> _options;
+
+    public MySqlDbContext(IOptions<MySqlOptions> options)
+    {
+        _options = options;
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+
+        optionsBuilder
+            .UseMySql(
+                _options.Value.ConnectionString,
+                ServerVersion.AutoDetect(_options.Value.ConnectionString),
+                opt =>
+                {
+                    opt.MigrationsAssembly("Ecommerce.Identity.Api");
+                });
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
