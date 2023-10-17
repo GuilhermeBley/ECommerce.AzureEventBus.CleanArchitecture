@@ -34,48 +34,23 @@ public class PostgreCatalogContext : CatalogContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Application.Model.Identity.RoleClaimModel>(builder =>
-        {
-            builder.HasKey(x => x.IdClaim);
-            builder
-                .HasOne<RoleModel>()
-                .WithMany()
-                .HasForeignKey(x => x.IdRole);
-        });
-
-        modelBuilder.Entity<Model.Identity.RoleDbModel>(builder =>
-        {
-            builder.HasKey(x => x.Id);
-            builder.HasIndex(x => x.NormalizedName).IsUnique();
-        });
-
-        modelBuilder.Entity<Application.Model.Identity.RoleUserClaimModel>(builder =>
-        {
-            builder.HasKey(x => x.Id);
-            builder
-                .HasOne<UserModel>()
-                .WithMany()
-                .HasForeignKey(x => x.UserId);
-        });
-
-        modelBuilder.Entity<Application.Model.Identity.UserClaimModel>(builder =>
-        {
-            builder.HasKey(x => x.IdClaim);
-            builder
-                .HasOne<UserModel>()
-                .WithMany()
-                .HasForeignKey(x => x.UserId);
-        });
-
         modelBuilder.Entity<Application.Model.Identity.UserModel>(builder =>
         {
             builder.HasKey(x => x.Id);
             builder.HasIndex(x => x.Email).IsUnique();
+
+            builder.Property(x => x.Email).HasColumnType("varchar(500)");
+            builder.Property(x => x.Name).HasColumnType("varchar(500)");
+            builder.Property(x => x.NickName).HasColumnType("varchar(500)");
+            builder.Property(x => x.PasswordHash).HasColumnType("varchar(500)");
+            builder.Property(x => x.PasswordSalt).HasColumnType("varchar(500)");
         });
 
         modelBuilder.Entity<Application.Model.Company.CompanyModel>(builder =>
         {
             builder.HasKey(x => x.Id);
+
+            builder.Property(x => x.Name).HasColumnType("varchar(500)");
         });
 
         modelBuilder.Entity<Application.Model.Company.CompanyProductModel>(builder =>
@@ -98,11 +73,17 @@ public class PostgreCatalogContext : CatalogContext
                 .HasOne<UserModel>()
                 .WithMany()
                 .HasForeignKey(x => x.UserId);
+
+            builder.Property(x => x.ClaimType).HasColumnType("varchar(255)");
+            builder.Property(x => x.ClaimValue).HasColumnType("varchar(255)");
         });
 
         modelBuilder.Entity<Application.Model.Product.ProductModel>(builder =>
         {
             builder.HasKey(x => x.Id);
+
+            builder.Property(x => x.Name).HasColumnType("varchar(255)");
+            builder.Property(x => x.Description).HasColumnType("varchar(1000)");
         });
     }
 }
