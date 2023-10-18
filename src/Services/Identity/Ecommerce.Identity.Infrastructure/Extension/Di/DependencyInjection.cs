@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Identity.Application.Mediator;
+using Ecommerce.Identity.Application.Security;
 using Ecommerce.Identity.Infrastructure.Mediator;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,10 @@ public static class DependencyInjection
         => services
             .AddApplicationContext()
             .AddApplicationMediator();
+
+    public static IServiceCollection AddClaimProvider(this IServiceCollection serviceDescriptors, Func<IServiceProvider, IClaimProvider> factory)
+        => serviceDescriptors
+        .AddScoped(factory);
 
     public static IServiceCollection AddApplicationMediator(this IServiceCollection serviceDescriptors)
         => serviceDescriptors
