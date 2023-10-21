@@ -15,13 +15,13 @@ services:
     image: mysql:5.7
     restart: always
     environment:
-      MYSQL_DATABASE: 'db'
+      MYSQL_DATABASE: "db"
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PW}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PW}
     ports:
-      - '3308:3308'
+      - "3310:3310"
     expose:
-      - '3308'
+      - "3310"
     volumes:
       - my-db:/var/lib/mysql
