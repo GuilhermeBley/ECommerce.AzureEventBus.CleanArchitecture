@@ -11,7 +11,7 @@ services:
     ports:
       - "5432:5432"
     restart: always
-  db:
+  mysql:
     image: mysql:5.7
     restart: always
     environment:
@@ -23,5 +23,3 @@ services:
       - "3310:3310"
     expose:
       - "3310"
-    volumes:
-      - my-db:/var/lib/mysql
