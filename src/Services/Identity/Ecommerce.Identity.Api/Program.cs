@@ -1,5 +1,6 @@
 using Ecommerce.Identity.Api.Options;
 using Ecommerce.Identity.Api.Service;
+using Ecommerce.Identity.Infrastructure.Extension.Di;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -9,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(opt =>
 {
@@ -34,6 +37,11 @@ builder.Services.AddAuthentication(opt =>
 
 builder.Services.Configure<JwtOptions>(
      builder.Configuration.GetSection(JwtOptions.SECTION));
+
+builder.Services.Configure<Ecommerce.Identity.Infrastructure.Options.MySqlOptions>(
+     builder.Configuration.GetSection(Ecommerce.Identity.Infrastructure.Options.MySqlOptions.SECTION));
+
+builder.Services.AddInfrastructure(null!);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

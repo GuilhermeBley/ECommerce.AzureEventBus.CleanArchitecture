@@ -8,16 +8,17 @@ namespace Ecommerce.Identity.Infrastructure.Extension.Di;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddMySqlContext(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, Func<IServiceProvider, IClaimProvider> claimProviderFactory)
         => services
             .AddApplicationContext()
-            .AddApplicationMediator();
+            .AddApplicationMediator()
+            .AddClaimProvider(claimProviderFactory);
 
-    public static IServiceCollection AddClaimProvider(this IServiceCollection serviceDescriptors, Func<IServiceProvider, IClaimProvider> factory)
+    private static IServiceCollection AddClaimProvider(this IServiceCollection serviceDescriptors, Func<IServiceProvider, IClaimProvider> factory)
         => serviceDescriptors
         .AddScoped(factory);
 
-    public static IServiceCollection AddApplicationMediator(this IServiceCollection serviceDescriptors)
+    private static IServiceCollection AddApplicationMediator(this IServiceCollection serviceDescriptors)
         => serviceDescriptors
         .AddMediatR(options => options.RegisterServicesFromAssemblies(typeof(IAppMediator).Assembly))
         .AddSingleton<IAppMediator, MediatRAdapter>()

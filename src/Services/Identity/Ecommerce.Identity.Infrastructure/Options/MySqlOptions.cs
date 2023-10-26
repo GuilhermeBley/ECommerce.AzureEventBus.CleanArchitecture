@@ -2,4 +2,5 @@
 
 public record MySqlOptions(string ConnectionString)
 {
+    public const string SECTION = "MySql";
 }
