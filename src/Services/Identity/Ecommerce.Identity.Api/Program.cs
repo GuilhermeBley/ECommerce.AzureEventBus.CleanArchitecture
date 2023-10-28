@@ -41,7 +41,11 @@ builder.Services.Configure<JwtOptions>(
 builder.Services.Configure<Ecommerce.Identity.Infrastructure.Options.MySqlOptions>(
      builder.Configuration.GetSection(Ecommerce.Identity.Infrastructure.Options.MySqlOptions.SECTION));
 
-builder.Services.AddInfrastructure(null!);
+builder.Services.AddInfrastructure(provider =>
+{
+    var contextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
+    return new Ecommerce.Identity.Api.Security.HttpContextClaimProvider(contextAccessor);
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
