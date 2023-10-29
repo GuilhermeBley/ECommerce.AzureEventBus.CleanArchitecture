@@ -1,3 +1,5 @@
+using Autofac;
+using Ecommerce.EventBus.Azure.Extensions.Di;
 using Ecommerce.Identity.Api.Options;
 using Ecommerce.Identity.Api.Service;
 using Ecommerce.Identity.Infrastructure.Extension.Di;
@@ -45,6 +47,11 @@ builder.Services.AddInfrastructure(provider =>
 {
     var contextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
     return new Ecommerce.Identity.Api.Security.HttpContextClaimProvider(contextAccessor);
+});
+
+builder.Services.AddEventBus((provider, eventBus) =>
+{
+
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

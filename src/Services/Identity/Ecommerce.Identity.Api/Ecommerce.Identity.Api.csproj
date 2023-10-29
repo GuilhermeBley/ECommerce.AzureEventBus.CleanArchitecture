@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ecommerce.Identity.Infrastructure\Ecommerce.Identity.Infrastructure.csproj" />
+	<ProjectReference Include="..\..\..\BuildingBlocks\EventBus\Ecommerce.EventBus.Azure\Ecommerce.EventBus.Azure.csproj" />
   </ItemGroup>
 
 </Project>
