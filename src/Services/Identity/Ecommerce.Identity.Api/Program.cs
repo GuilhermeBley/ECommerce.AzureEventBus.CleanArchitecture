@@ -60,6 +60,23 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<ITokenService, TokenService>();
 
+builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
+{
+    var openTypes = new[]
+    {
+        typeof(Ecommerce.Identity.Application.Mediator.IAppRequestHandler<,>),
+        typeof(Ecommerce.Identity.Application.Mediator.IAppNotificationHandler<>),
+    };
+
+    foreach (var openType in openTypes)
+    {
+        builder
+            .RegisterAssemblyTypes(typeof(Ecommerce.Identity.Application.Commands.User.CreateUser.CreateUserHandler).Assembly)
+            .AsClosedTypesOf(openType)
+            .AsImplementedInterfaces();
+    }
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
