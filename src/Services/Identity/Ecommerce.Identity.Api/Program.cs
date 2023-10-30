@@ -1,4 +1,5 @@
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Ecommerce.EventBus.Azure.Extensions.Di;
 using Ecommerce.Identity.Api.Options;
 using Ecommerce.Identity.Api.Service;
@@ -8,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
 // Add services to the container.
 
