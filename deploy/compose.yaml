@@ -1,7 +1,10 @@
 services:
   # catalog:
+  #   container_name: catalog-api
   #   build:
   #       dockerfile: ../src/Services/Catalog/Ecommerce.Catalog.Api/DockerFile
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Production
   postgres:
     container_name: postgres
     image: postgres:latest
