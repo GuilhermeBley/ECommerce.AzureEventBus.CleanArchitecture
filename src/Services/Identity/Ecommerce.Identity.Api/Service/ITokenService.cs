@@ -14,6 +14,8 @@ internal interface  ITokenService
 
 internal class TokenService : ITokenService
 {
+    private static readonly TimeSpan DefaultTimeToExpiress = TimeSpan.FromHours(2);
+
     private readonly IOptions<JwtOptions> _options;
 
     public TokenService(IOptions<Options.JwtOptions> options)
@@ -23,8 +25,8 @@ internal class TokenService : ITokenService
 
     public string GenerateToken(Claim[] claims, TimeSpan? expiresTime = null)
     {
-        expiresTime = expiresTime ?? TimeSpan.FromHours(2);
-
+        expiresTime = expiresTime ?? DefaultTimeToExpiress;
+        
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_options.Value.Secret);
 
