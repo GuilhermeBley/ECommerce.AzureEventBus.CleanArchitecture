@@ -29,14 +29,13 @@ builder.Services.AddAuthentication(opt =>
         builder.Configuration.GetSection($"{JwtOptions.SECTION}:{nameof(JwtOptions.Secret)}")
         .Value);
 
-    opt.RequireHttpsMetadata = false;
     opt.SaveToken = true;
     opt.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ValidateIssuer = false,
-        ValidateAudience = false
+        ValidateAudience = false,
     };
 });
 
