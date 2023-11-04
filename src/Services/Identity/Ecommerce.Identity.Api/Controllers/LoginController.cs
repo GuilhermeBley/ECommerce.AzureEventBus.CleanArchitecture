@@ -20,6 +20,11 @@ public class LoginController : ControllerBase
         LoginUserRequest model, 
         CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var loginResult = await _appMediator.Send<LoginUserRequest, Result<LoginUserResponse>>(model, cancellationToken);
+
+        if (loginResult.IsSuccess)
+            return Ok(loginResult.Value);
+
+        return Unauthorized();
     }
 }
