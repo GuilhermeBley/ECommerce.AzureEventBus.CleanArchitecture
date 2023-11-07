@@ -30,7 +30,7 @@ public class LoginController : ControllerBase
         return Unauthorized();
     }
 
-    [HttpPost("resendEmailConfirmation")]
+    [HttpPost("resendEmailConfirmation")]   
     public async Task<IActionResult> LoginAsync(
         ResendEmailConfirmationRequest model,
         CancellationToken cancellationToken = default)
