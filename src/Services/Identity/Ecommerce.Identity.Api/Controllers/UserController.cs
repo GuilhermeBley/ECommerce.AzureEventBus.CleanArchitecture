@@ -24,8 +24,8 @@ public class UserController : ControllerBase
     {
         var result = await _appMediator.Send<CreateUserRequest, Result<CreateUserResponse>>(model, cancellationToken);
 
-        if (result.IsSuccess)
-            return Created($"api/User/{result.Value?.Id}", result.Value);
+        if (result.TryGetValue(out var value))
+            return Created($"api/User/{value.Id}", value);
 
         return BadRequest(result.Errors);
     }
