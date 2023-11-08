@@ -1,5 +1,6 @@
 using Ecommerce.Identity.Application.Commands.User.CreateUser;
 using Ecommerce.Identity.Application.Commands.User.GetUser;
+using Ecommerce.Identity.Application.Commands.User.UpdateUser;
 using Ecommerce.Identity.Application.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,22 @@ public class UserController : ControllerBase
         {
             UserId = userId
         }, cancellationToken);
+
+        if (result.TryGetValue(out var value))
+            return Ok(value);
+
+        return BadRequest(result.Errors);
+    }
+
+    [HttpPut("{userId}")]
+    public async Task<ActionResult<CreateUserResponse>> UpdateByIdAsync(
+        Guid userId,
+        UpdateUserRequest model, 
+        CancellationToken cancellationToken = default)
+    {
+        model.IdToUpdate = userId;
+
+        var result = await _appMediator.Send<UpdateUserRequest, Result<UpdateUserResponse>>(model, cancellationToken);
 
         if (result.TryGetValue(out var value))
             return Ok(value);
