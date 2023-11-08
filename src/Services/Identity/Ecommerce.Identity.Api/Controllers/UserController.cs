@@ -1,4 +1,5 @@
 using Ecommerce.Identity.Application.Commands.User.CreateUser;
+using Ecommerce.Identity.Application.Commands.User.GetUser;
 using Ecommerce.Identity.Application.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,22 @@ public class UserController : ControllerBase
 
         if (result.TryGetValue(out var value))
             return Created($"api/User/{value.Id}", value);
+
+        return BadRequest(result.Errors);
+    }
+
+    [HttpGet("{userId}")]
+    public async Task<ActionResult<CreateUserResponse>> GetByIdAsync(
+        Guid userId, 
+        CancellationToken cancellationToken = default)
+    {
+        var result = await _appMediator.Send<GetUserRequest, Result<GetUserResponse>>(new GetUserRequest
+        {
+            UserId = userId
+        }, cancellationToken);
+
+        if (result.TryGetValue(out var value))
+            return Ok(value);
 
         return BadRequest(result.Errors);
     }
