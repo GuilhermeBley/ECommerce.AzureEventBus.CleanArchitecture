@@ -53,8 +53,8 @@ public class CompanyController : ControllerBase
         return BadRequest(result.Errors);
     }
 
-    [HttpPatch("{companyId}")]
-    public async Task<ActionResult> UpdateAsync(
+    [HttpPatch("Name/{companyId}")]
+    public async Task<ActionResult> PatchNameAsync(
         Guid companyId,
         UpdateCompanyNameRequest model,
         CancellationToken cancellationToken = default)
