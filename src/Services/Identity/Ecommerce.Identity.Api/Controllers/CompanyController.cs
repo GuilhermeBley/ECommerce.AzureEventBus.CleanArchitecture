@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Identity.Application.Commands.Company.CreateCompany;
 using Ecommerce.Identity.Application.Commands.Company.DisableCompany;
+using Ecommerce.Identity.Application.Commands.Company.UpdateCompanyName;
 using Ecommerce.Identity.Application.Mediator;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -27,13 +28,13 @@ public class CompanyController : ControllerBase
         if (result.TryGetValue(out var resultValue))
             return Created($"api/Company/{resultValue.Id}", resultValue);
 
-        if (result.Errors.FirstOrDefault()?.Code == (int)HttpStatusCode.Conflict)
+        if (result.Errors.Any(r => r.Code == (int)HttpStatusCode.Conflict))
             return Conflict(result.Errors);
 
         return BadRequest(result.Errors);
     }
 
-    [HttpPost("{companyId}")]
+    [HttpDelete("{companyId}")]
     public async Task<ActionResult> DeleteAsync(
         Guid companyId,
         CancellationToken cancellationToken = default)
@@ -46,7 +47,26 @@ public class CompanyController : ControllerBase
         if (result.TryGetValue(out var resultValue))
             return Ok(resultValue);
 
-        if (result.Errors.FirstOrDefault()?.Code == (int)HttpStatusCode.NotFound)
+        if (result.Errors.Any(r => r.Code == (int)HttpStatusCode.NotFound))
+            return NotFound(result.Errors);
+
+        return BadRequest(result.Errors);
+    }
+
+    [HttpPatch("{companyId}")]
+    public async Task<ActionResult> UpdateAsync(
+        Guid companyId,
+        UpdateCompanyNameRequest model,
+        CancellationToken cancellationToken = default)
+    {
+        model.CompanyId = companyId;
+
+        var result = await _appMediator.Send<UpdateCompanyNameRequest, Result<UpdateCompanyNameResponse>>(model, cancellationToken);
+
+        if (result.TryGetValue(out var resultValue))
+            return Ok(resultValue);
+
+        if (result.Errors.Any(r => r.Code == (int)HttpStatusCode.NotFound))
             return NotFound(result.Errors);
 
         return BadRequest(result.Errors);
