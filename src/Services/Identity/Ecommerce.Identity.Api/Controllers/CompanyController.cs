@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Identity.Application.Commands.Company.CreateCompany;
+using Ecommerce.Identity.Application.Commands.Company.DisableCompany;
 using Ecommerce.Identity.Application.Mediator;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -16,6 +17,7 @@ public class CompanyController : ControllerBase
         _appMediator = appMediator;
     }
 
+    [HttpPost]
     public async Task<ActionResult> CreateAsync(
         CreateCompanyRequest model,
         CancellationToken cancellationToken = default)
@@ -27,6 +29,25 @@ public class CompanyController : ControllerBase
 
         if (result.Errors.FirstOrDefault()?.Code == (int)HttpStatusCode.Conflict)
             return Conflict(result.Errors);
+
+        return BadRequest(result.Errors);
+    }
+
+    [HttpPost("{companyId}")]
+    public async Task<ActionResult> DeeleteAsync(
+        Guid companyId,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await _appMediator.Send<DisableCompanyRequest, Result<DisableCompanyResponse>>(new DisableCompanyRequest
+        {
+            CompanyId = companyId
+        }, cancellationToken);
+
+        if (result.TryGetValue(out var resultValue))
+            return Created($"api/Company/{resultValue.Id}", resultValue);
+
+        if (result.Errors.FirstOrDefault()?.Code == (int)HttpStatusCode.NotFound)
+            return NotFound(result.Errors);
 
         return BadRequest(result.Errors);
     }
