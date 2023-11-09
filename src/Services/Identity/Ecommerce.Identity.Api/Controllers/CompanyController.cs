@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Identity.Application.Commands.Company.CreateCompany;
 using Ecommerce.Identity.Application.Commands.Company.DisableCompany;
+using Ecommerce.Identity.Application.Commands.Company.GetAllCompaniesFromUser;
 using Ecommerce.Identity.Application.Commands.Company.UpdateCompanyName;
 using Ecommerce.Identity.Application.Mediator;
 using Microsoft.AspNetCore.Mvc;
@@ -68,6 +69,21 @@ public class CompanyController : ControllerBase
 
         if (result.Errors.Any(r => r.Code == (int)HttpStatusCode.NotFound))
             return NotFound(result.Errors);
+
+        return BadRequest(result.Errors);
+    }
+
+    [HttpGet("my-companies")]
+    public async Task<ActionResult> GetAllCompaniesFromUserAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var result = await _appMediator.Send<GetAllCompaniesFromUserRequest, Result<GetAllCompaniesFromUserResponse>>(new GetAllCompaniesFromUserRequest { }, cancellationToken);
+
+        if (result.TryGetValue(out var resultValue))
+            return Ok(resultValue);
+
+        if (result.Errors.Any(r => r.Code == (int)HttpStatusCode.NotFound))
+            return NoContent();
 
         return BadRequest(result.Errors);
     }
