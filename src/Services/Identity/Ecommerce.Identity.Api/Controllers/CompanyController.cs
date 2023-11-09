@@ -34,7 +34,7 @@ public class CompanyController : ControllerBase
     }
 
     [HttpPost("{companyId}")]
-    public async Task<ActionResult> DeeleteAsync(
+    public async Task<ActionResult> DeleteAsync(
         Guid companyId,
         CancellationToken cancellationToken = default)
     {
@@ -44,7 +44,7 @@ public class CompanyController : ControllerBase
         }, cancellationToken);
 
         if (result.TryGetValue(out var resultValue))
-            return Created($"api/Company/{resultValue.Id}", resultValue);
+            return Ok(resultValue);
 
         if (result.Errors.FirstOrDefault()?.Code == (int)HttpStatusCode.NotFound)
             return NotFound(result.Errors);
