@@ -77,7 +77,7 @@ public class CompanyController : ControllerBase
     public async Task<ActionResult> GetAllCompaniesFromUserAsync(
         CancellationToken cancellationToken = default)
     {
-        var result = await _appMediator.Send<GetAllCompaniesFromUserRequest, Result<GetAllCompaniesFromUserResponse>>(new GetAllCompaniesFromUserRequest { }, cancellationToken);
+        var result = await _appMediator.Send<GetAllCompaniesFromCurrentUserRequest, Result<GetAllCompaniesFromCurrentUserResponse>>(new GetAllCompaniesFromCurrentUserRequest { }, cancellationToken);
 
         if (result.TryGetValue(out var resultValue))
             return Ok(resultValue);

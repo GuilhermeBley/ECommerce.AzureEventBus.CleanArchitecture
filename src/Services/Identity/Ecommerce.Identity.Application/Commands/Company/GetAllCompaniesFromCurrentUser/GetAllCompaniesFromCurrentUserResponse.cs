@@ -1,10 +1,10 @@
 ﻿namespace Ecommerce.Identity.Application.Commands.Company.GetAllCompaniesFromUser;
 
-public class GetAllCompaniesFromUserResponse
+public class GetAllCompaniesFromCurrentUserResponse
 {
     public IQueryable<CompanyResponse> Companies { get; }
 
-    public GetAllCompaniesFromUserResponse(IQueryable<CompanyResponse> companies)
+    public GetAllCompaniesFromCurrentUserResponse(IQueryable<CompanyResponse> companies)
     {
         Companies = companies;
     }

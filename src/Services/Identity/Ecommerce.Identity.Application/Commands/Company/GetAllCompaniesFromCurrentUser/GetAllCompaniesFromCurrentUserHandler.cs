@@ -6,31 +6,31 @@ using Ecommerce.Identity.Core.Entities;
 
 namespace Ecommerce.Identity.Application.Commands.Company.GetAllCompaniesFromUser;
 
-public class GetAllCompaniesFromUserHandler
-    : IAppRequestHandler<GetAllCompaniesFromUserRequest, Result<GetAllCompaniesFromUserResponse>>
+public class GetAllCompaniesFromCurrentUserHandler
+    : IAppRequestHandler<GetAllCompaniesFromCurrentUserRequest, Result<GetAllCompaniesFromCurrentUserResponse>>
 {
     private readonly IdentityContext _identityContext;
     private readonly IClaimProvider _claimProvider;
 
-    public GetAllCompaniesFromUserHandler(IdentityContext identityContext, IClaimProvider claimProvider)
+    public GetAllCompaniesFromCurrentUserHandler(IdentityContext identityContext, IClaimProvider claimProvider)
     {
         _identityContext = identityContext;
         _claimProvider = claimProvider;
     }
 
-    public async Task<Result<GetAllCompaniesFromUserResponse>> Handle(GetAllCompaniesFromUserRequest request, CancellationToken cancellationToken)
+    public async Task<Result<GetAllCompaniesFromCurrentUserResponse>> Handle(GetAllCompaniesFromCurrentUserRequest request, CancellationToken cancellationToken)
     {
         var userId = (await _claimProvider.GetCurrentAsync())?.GetUserId();
 
         if (userId is null)
-            return ResultBuilderExtension.CreateFailed<GetAllCompaniesFromUserResponse>(ErrorEnum.Unauthorized);
+            return ResultBuilderExtension.CreateFailed<GetAllCompaniesFromCurrentUserResponse>(ErrorEnum.Unauthorized);
 
         var queryOnlyActivatedCompanies =
             from company in _identityContext.Companies
             join userCompany in _identityContext.CompanyUsersClaims
                 on company.Id equals userCompany.CompanyId
             where !company.Disabled
-            select new GetAllCompaniesFromUserResponse.CompanyResponse
+            select new GetAllCompaniesFromCurrentUserResponse.CompanyResponse
             {
                 Id = company.Id,
                 Name = company.Name,
@@ -39,7 +39,7 @@ public class GetAllCompaniesFromUserHandler
 
         return await Task.FromResult(
             Result.Success(
-                new GetAllCompaniesFromUserResponse(queryOnlyActivatedCompanies)
+                new GetAllCompaniesFromCurrentUserResponse(queryOnlyActivatedCompanies)
         ));
     }
 }
