@@ -3,6 +3,7 @@ using Ecommerce.Identity.Application.Commands.Company.DisableCompany;
 using Ecommerce.Identity.Application.Commands.Company.GetAllCompaniesFromUser;
 using Ecommerce.Identity.Application.Commands.Company.UpdateCompanyName;
 using Ecommerce.Identity.Application.Mediator;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -10,6 +11,7 @@ namespace Ecommerce.Identity.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class CompanyController : ControllerBase
 {
     private readonly IAppMediator _appMediator;
