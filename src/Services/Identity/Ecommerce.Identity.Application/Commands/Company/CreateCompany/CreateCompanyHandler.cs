@@ -8,6 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Identity.Application.Commands.Company.CreateCompany;
 
+/// <summary>
+/// Class contains method handle to execute the company creation of each user
+/// </summary>
+/// <remarks>
+///     <para>If user contains more than specified company quantity, this method will return an error result with message <see cref="ErrorEnum.CompanyQuantityOverflow"/></para>
+/// </remarks>
 public class CreateCompanyHandler : IAppRequestHandler<CreateCompanyRequest, Result<CreateCompanyResponse>>
 {
     private const int MAX_USER_PER_COMAPANY = 10;
