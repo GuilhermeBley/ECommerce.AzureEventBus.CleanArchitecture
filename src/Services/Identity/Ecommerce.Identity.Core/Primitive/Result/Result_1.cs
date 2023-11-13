@@ -31,6 +31,12 @@ public class Result
     public static Result Failed(IEnumerable<ICoreError> errors)
         => new(errors);
 
+    public static Result Failed(ErrorEnum error)
+        => new(new ICoreError[] { ParseErrorEnum(error) });
+
+    public static Result Failed(params ErrorEnum[] errors)
+        => new(errors.Select(e => ParseErrorEnum(e)));
+
     public static Result Success()
         => new(Array.Empty<ICoreError>());
     public static Result<T> Success<T>()
@@ -46,4 +52,20 @@ public class Result
         => !this.Errors.Any() && !other.Errors.Any()
         ? throw new InvalidOperationException("This or other doesn't contain errors.")
         : new Result(this.Errors.Concat(other.Errors));
+
+    protected static internal ICoreError ParseErrorEnum(ErrorEnum @enum)
+        => new InternalCoreErrorParser(@enum);
+
+    private class InternalCoreErrorParser : ICoreError
+    {
+        public int Code { get; }
+
+        public string Message { get; }
+
+        public InternalCoreErrorParser(ErrorEnum @enum)
+        {
+            Code = (int)@enum;
+            Message = @enum.ToString();
+        }
+    }
 }

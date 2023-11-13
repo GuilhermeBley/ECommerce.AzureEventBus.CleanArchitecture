@@ -19,5 +19,6 @@ public enum ErrorEnum
     InvalidPhoneNumber = 400,
     UserNotFound = 404,
     CompanyNotFound = 404,
-    ConflicUser = 409
+    ConflicUser = 409,
+    CompanyQuantityOverflow = 400
 }

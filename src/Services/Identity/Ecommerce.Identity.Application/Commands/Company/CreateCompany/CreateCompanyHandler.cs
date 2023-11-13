@@ -2,25 +2,35 @@
 using Ecommerce.EventBus.Events;
 using Ecommerce.Identity.Application.Mediator;
 using Ecommerce.Identity.Application.Repositories;
+using Ecommerce.Identity.Application.Security;
 using Ecommerce.Identity.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Identity.Application.Commands.Company.CreateCompany;
 
 public class CreateCompanyHandler : IAppRequestHandler<CreateCompanyRequest, Result<CreateCompanyResponse>>
 {
+    private const int MAX_USER_PER_COMAPANY = 10;
+
     private readonly IEventBus _eventBus;
+    private readonly IClaimProvider _claimProvider;
     private readonly IdentityContext _identityContext;
 
     public CreateCompanyHandler(
         IEventBus eventBus,
+        IClaimProvider claimProvider,
         IdentityContext identityContext)
     {
         _eventBus = eventBus;
+        _claimProvider = claimProvider;
         _identityContext = identityContext;
     }
 
     public async Task<Result<CreateCompanyResponse>> Handle(CreateCompanyRequest request, CancellationToken cancellationToken)
     {
+        if (await IsCompanyQuantityOverflowFromCurrentUser())
+            return ResultBuilderExtension.CreateFailed<CreateCompanyResponse>(ErrorEnum.CompanyQuantityOverflow);
+
         var companyResult = Core.Entities.Company.Create(
             id: Guid.NewGuid(),
             name: request.Name,
@@ -59,5 +69,21 @@ public class CreateCompanyHandler : IAppRequestHandler<CreateCompanyRequest, Res
                 Id = companyCreated.Entity.Id
             }  
         );
+    }
+
+    private async Task<bool> IsCompanyQuantityOverflowFromCurrentUser()
+    {
+        var userIdResult = (await _claimProvider.GetCurrentAsync())?.GetUserId();
+
+        if (userIdResult is null ||
+            !userIdResult.TryGetValue(out var userId))
+            return true;
+
+        var companiesFound = await _identityContext
+            .CompanyUsersClaims
+            .Where(c => c.UserId == userId)
+            .CountAsync();
+
+        return companiesFound > MAX_USER_PER_COMAPANY;
     }
 }
