@@ -20,9 +20,14 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddEventBus((provider, eventBus) =>
 {
-    eventBus.Subscribe<Ecommerce.EventBus.Events.CreateProductEvent, Ecommerce.Catalog.Application.Notifications.Product.CreateProduct.CreateProductEventHandler>();
-    eventBus.Subscribe<Ecommerce.EventBus.Events.DeleteProductEvent, Ecommerce.Catalog.Application.Notifications.Product.DeleteProduct.DeleteProductEventHandler>();
-    eventBus.Subscribe<Ecommerce.EventBus.Events.UpdateProductEvent, Ecommerce.Catalog.Application.Notifications.Product.UpdateProduct.UpdateProductEventHandler>();
+    eventBus.Subscribe<Ecommerce.EventBus.Events.CreateProductEvent, 
+        Ecommerce.Catalog.Application.Notifications.Product.CreateProduct.CreateProductEventHandler>();
+    eventBus.Subscribe<Ecommerce.EventBus.Events.DeleteProductEvent, 
+        Ecommerce.Catalog.Application.Notifications.Product.DeleteProduct.DeleteProductEventHandler>();
+    eventBus.Subscribe<Ecommerce.EventBus.Events.UpdateProductEvent, 
+        Ecommerce.Catalog.Application.Notifications.Product.UpdateProduct.UpdateProductEventHandler>();
+    eventBus.Subscribe<Ecommerce.EventBus.Events.CompanyCreatedEvent, 
+        Ecommerce.Catalog.Application.Notifications.Company.CreateCompany.CompanyCreatedEventHandler>();
 });
 
 builder.Services.AddInfrastructure();
