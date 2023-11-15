@@ -4,7 +4,7 @@ using Ecommerce.EventBus.Events;
 namespace Ecommerce.Catalog.Application.Notifications.User.CreateUser;
 
 public class CreateUserEventHandler
-    : IAppNotificationHandler<CreateUserEvent>
+    : IIntegrationEventHandler<CreateUserEvent>
 {
     private readonly CatalogContext _catalogContext;
 
@@ -13,17 +13,17 @@ public class CreateUserEventHandler
         _catalogContext = catalogContext;
     }
 
-    public async Task Handle(CreateUserEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(CreateUserEvent @event)
     {
         await using var transaction = await _catalogContext.Database.BeginTransactionAsync();
 
         await _catalogContext.Users.AddAsync(new Model.Identity.UserModel
         {
-            Email = notification.Email,
+            Email = @event.Email,
             EmailConfirmed = false,
-            Id = notification.Id,
-            Name = notification.Name,
-            NickName = notification.NickName,
+            Id = @event.Id,
+            Name = @event.Name,
+            NickName = @event.NickName,
             PasswordHash = string.Empty,
             PasswordSalt = string.Empty,
         });
