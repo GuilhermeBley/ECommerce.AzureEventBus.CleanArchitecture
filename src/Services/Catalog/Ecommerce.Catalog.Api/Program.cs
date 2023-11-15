@@ -29,7 +29,7 @@ builder.Services.AddEventBus((provider, eventBus) =>
     eventBus.Subscribe<Ecommerce.EventBus.Events.CompanyCreatedEvent, 
         Ecommerce.Catalog.Application.Notifications.Company.CreateCompany.CompanyCreatedEventHandler>();
     eventBus.Subscribe<Ecommerce.EventBus.Events.CreateUserEvent, 
-        Ecommerce.Catalog.Application.Notifications.Company.CreateCompany.CreateUserEventHandler>();
+        Ecommerce.Catalog.Application.Notifications.User.CreateUser.CreateUserEventHandler>();
 });
 
 builder.Services.AddInfrastructure();
