@@ -6,6 +6,9 @@ using Microsoft.Extensions.Options;
 
 namespace Ecommerce.Identity.Infrastructure.Context;
 
+/// <summary>
+/// mysql context with identity context tables
+/// </summary>
 public class MySqlDbContext : IdentityContext
 {
     private readonly IOptions<MySqlOptions> _options;
