@@ -3,6 +3,9 @@ using Ecommerce.EventBus.Events;
 
 namespace Ecommerce.Catalog.Application.Notifications.Company.CreateCompany;
 
+/// <summary>
+/// Add data to catalog context
+/// </summary>
 public class CompanyCreatedEventHandler : IIntegrationEventHandler<CompanyCreatedEvent>
 {
     private readonly CatalogContext _catalogContext;
