@@ -20,6 +20,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<ActionResult<CreateUserResponse>> CreateAsync(
         CreateUserRequest model, 
         CancellationToken cancellationToken = default)
