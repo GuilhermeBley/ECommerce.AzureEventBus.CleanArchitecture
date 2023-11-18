@@ -1,7 +1,8 @@
 ﻿namespace Ecommerce.Identity.Api.Options;
 
-public record JwtOptions(
-    string Secret)
+public class JwtOptions
 {
     public const string SECTION = "Jwt";
+
+    public string Secret { get; set; } = string.Empty;
 }
