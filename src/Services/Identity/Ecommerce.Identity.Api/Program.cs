@@ -39,6 +39,9 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.Configure<Ecommerce.EventBus.Azure.AzureServiceBusOptions>(
+     builder.Configuration.GetSection(Ecommerce.EventBus.Azure.AzureServiceBusOptions.SECTION));
+
 builder.Services.Configure<JwtOptions>(
      builder.Configuration.GetSection(JwtOptions.SECTION));
 
