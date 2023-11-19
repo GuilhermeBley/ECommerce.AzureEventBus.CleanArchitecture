@@ -75,6 +75,25 @@ public class CompanyController : ControllerBase
         return BadRequest(result.Errors);
     }
 
+    [HttpPatch("Disabled/{companyId}")]
+    public async Task<ActionResult> PatchNameAsync(
+        Guid companyId,
+        DisableCompanyRequest model,
+        CancellationToken cancellationToken = default)
+    {
+        model.CompanyId = companyId;
+
+        var result = await _appMediator.Send<DisableCompanyRequest, Result<DisableCompanyResponse>>(model, cancellationToken);
+
+        if (result.TryGetValue(out var resultValue))
+            return Ok(resultValue);
+
+        if (result.Errors.Any(r => r.Code == (int)HttpStatusCode.NotFound))
+            return NotFound(result.Errors);
+
+        return BadRequest(result.Errors);
+    }
+
     [HttpGet("my-companies")]
     public async Task<ActionResult> GetAllCompaniesFromUserAsync(
         CancellationToken cancellationToken = default)
