@@ -28,7 +28,7 @@ public class DisableCompanyHandler
         if (companyFound is null)
             return ResultBuilderExtension.CreateFailed<DisableCompanyResponse>(ErrorEnum.CompanyNotFound);
 
-        companyFound.Disabled = true;
+        companyFound.Disabled = request.Disabled;
         companyFound.UpdateAt = DateTime.UtcNow;
 
         await _identityContext.SaveChangesAsync(cancellationToken);
@@ -38,6 +38,7 @@ public class DisableCompanyHandler
             CreateAt = companyFound.CreateAt,
             Name = companyFound.Name,
             Id = companyFound.Id,
+            Disabled = companyFound.Disabled,
             UpdateAt = companyFound.UpdateAt.Value,
         });
 
