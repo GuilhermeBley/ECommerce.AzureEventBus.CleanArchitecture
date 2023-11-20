@@ -92,6 +92,9 @@ public class ResultBuilder
         _errors.AddRange(errors);
     }
 
+    public override string ToString()
+        => string.Concat("Errors count: ", _errors.Count);
+
     public void AddIfIsInRange(
         string? str,
         string message,
