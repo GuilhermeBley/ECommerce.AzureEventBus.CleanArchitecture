@@ -25,6 +25,9 @@ public class Result
         IsSuccess = !Errors.Any();
     }
 
+    public override string ToString()
+        => string.Concat("Errors count: ", Errors.Count);
+
     public static Result Failed(ICoreError error)
         => new(new ICoreError[] { error });
 
