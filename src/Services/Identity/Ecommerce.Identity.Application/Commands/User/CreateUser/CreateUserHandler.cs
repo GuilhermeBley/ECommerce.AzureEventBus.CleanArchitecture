@@ -33,7 +33,7 @@ public class CreateUserHandler : IAppRequestHandler<CreateUserRequest, Result<Cr
 
         await using var transaction = await _identityContext.Database.BeginTransactionAsync(cancellationToken);
 
-        var userByEmail = await _identityContext.Users.FirstOrDefaultAsync(u => u.Email.ToUpperInvariant() == request.Email.ToUpperInvariant());
+        var userByEmail = await _identityContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email.ToUpperInvariant());
 
         if (userByEmail is not null)
             return ResultBuilderExtension.CreateFailed<CreateUserResponse>(ErrorEnum.ConflicUser);

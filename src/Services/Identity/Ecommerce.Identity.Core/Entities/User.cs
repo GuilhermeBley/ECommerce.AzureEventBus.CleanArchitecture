@@ -215,8 +215,8 @@ public class User
         resultBuilder.AddIf(
             string.IsNullOrWhiteSpace(password) ||
             password.Any(c => !ALLOWED_PASSWORD.Contains(c)) ||
-            password.Any(c => !char.IsLetter(c)) ||
-            password.Any(c => !char.IsDigit(c)),
+            !password.Any(c => char.IsLetter(c)) ||
+            !password.Any(c => char.IsDigit(c)),
             ErrorEnum.InvalidPassword
         );
 
