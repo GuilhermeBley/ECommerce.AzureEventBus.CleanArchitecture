@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Ecommerce.EventBus.Abstractions;
 using Ecommerce.EventBus.Azure.Extensions.Di;
 using Ecommerce.Identity.Api.Options;
 using Ecommerce.Identity.Api.Service;
@@ -83,6 +84,8 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 });
 
 var app = builder.Build();
+
+_ = app.Services.GetRequiredService<IEventBus>(); // subscribing in events
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -5,6 +5,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
 using Ecommerce.Catalog.Api.Security;
+using Ecommerce.EventBus.Abstractions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -64,6 +65,8 @@ builder.Services.Configure<Ecommerce.Catalog.Infrastructure.Options.PostgresOpti
      builder.Configuration.GetSection(Ecommerce.Catalog.Infrastructure.Options.PostgresOptions.SECTION));
 
 var app = builder.Build();
+
+_ = app.Services.GetRequiredService<IEventBus>(); // subscribing in events
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
