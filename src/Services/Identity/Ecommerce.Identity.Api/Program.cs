@@ -55,10 +55,12 @@ builder.Services.AddInfrastructure(provider =>
     return new Ecommerce.Identity.Api.Security.HttpContextClaimProvider(contextAccessor);
 });
 
-builder.Services.AddEventBus((provider, eventBus) =>
-{
+builder.Services.AddEventBus(
+    subscriptionName: builder.Configuration[$"{Ecommerce.EventBus.Azure.AzureServiceBusOptions.SECTION}:identity-subs"],
+    (provider, eventBus) =>
+    {
 
-});
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

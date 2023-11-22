@@ -7,7 +7,10 @@ namespace Ecommerce.EventBus.Azure.Extensions.Di;
 
 public static class EventBusServiceBusExtension
 {
-    public static IServiceCollection AddEventBus(this IServiceCollection serviceCollection, Action<IServiceProvider, IEventBus>? onConfigure = null)
+    public static IServiceCollection AddEventBus(
+        this IServiceCollection serviceCollection,
+        string subscriptionName,
+        Action<IServiceProvider, IEventBus>? onConfigure = null)
     {
         serviceCollection.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
 
@@ -20,7 +23,8 @@ public static class EventBusServiceBusExtension
                 var serviceBusPersisterConnection
                     = new DefaultServiceBusPersisterConnection(
                         logger: logFactory.CreateLogger<DefaultServiceBusPersisterConnection>(),
-                        options: eventBusOptions
+                        options: eventBusOptions,
+                        subscription: subscriptionName
                     );
 
                 var subsManager = provider.GetRequiredService<IEventBusSubscriptionsManager>();
