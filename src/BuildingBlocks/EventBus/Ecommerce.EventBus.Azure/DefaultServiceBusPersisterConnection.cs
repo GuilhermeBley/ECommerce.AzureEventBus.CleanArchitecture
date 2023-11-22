@@ -17,7 +17,8 @@ public class DefaultServiceBusPersisterConnection : IServiceBusPersisterConnecti
 
     public DefaultServiceBusPersisterConnection(
         ILogger<DefaultServiceBusPersisterConnection> logger,
-        IOptions<AzureServiceBusOptions> options)
+        IOptions<AzureServiceBusOptions> options,
+        string subscription)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _options = options;

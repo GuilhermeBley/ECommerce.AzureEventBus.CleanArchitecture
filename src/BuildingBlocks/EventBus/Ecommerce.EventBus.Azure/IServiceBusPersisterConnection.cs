@@ -2,7 +2,7 @@
 
 namespace Ecommerce.EventBus.Azure
 {
-    public interface IServiceBusPersisterConnection
+    public interface IServiceBusPersisterConnection : IDisposable, IAsyncDisposable
     {
         ServiceBusSender CreateModel();
     }
