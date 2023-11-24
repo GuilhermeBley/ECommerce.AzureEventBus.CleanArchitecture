@@ -16,24 +16,23 @@ namespace Ecommerce.EventBus.Azure
         private readonly IServiceBusPersisterConnection _serviceBusPersisterConnection;
         private readonly ILogger<EventBusServiceBus> _logger;
         private readonly IEventBusSubscriptionsManager _subsManager;
-        private readonly ServiceBusProcessor _subscriptionProcessor;
-        private readonly ServiceBusRuleManager _subscriptionRuleManager;
         private readonly IServiceScope _scopeLifeTime;
+
+        private ServiceBusProcessor _subscriptionProcessor 
+            => _serviceBusPersisterConnection.SubscriptionProcessor;
+        private ServiceBusRuleManager _subscriptionRuleManager 
+            => _serviceBusPersisterConnection.SubscriptionRuleManager;
 
         public EventBusServiceBus(
             IServiceBusPersisterConnection serviceBusPersisterConnection,
             ILogger<EventBusServiceBus> logger, 
             IEventBusSubscriptionsManager subsManager, 
-            IOptions<AzureServiceBusOptions> options,
             IServiceProvider provider)
         {
             _serviceBusPersisterConnection = serviceBusPersisterConnection;
             _logger = logger;
             _subsManager = subsManager ?? new InMemoryEventBusSubscriptionsManager();
-            var subscriptionClient = new ServiceBusClient(options.Value.ConnectionString);
             _scopeLifeTime = provider.CreateScope();
-            _subscriptionProcessor = subscriptionClient.CreateProcessor(options.Value.TopicName, options.Value.Subscription);
-            _subscriptionRuleManager = subscriptionClient.CreateRuleManager(options.Value.TopicName, options.Value.Subscription);
             RegisterSubscriptionClientMessageHandler();
         }
 
@@ -118,6 +117,7 @@ namespace Ecommerce.EventBus.Azure
         public void Dispose()
         {
             _subsManager.Clear();
+            _serviceBusPersisterConnection.Dispose();
         }
 
         private void RegisterSubscriptionClientMessageHandler()
