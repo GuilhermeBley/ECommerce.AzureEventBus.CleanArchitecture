@@ -33,7 +33,6 @@ public static class EventBusServiceBusExtension
                     serviceBusPersisterConnection: serviceBusPersisterConnection,
                     logger: logFactory.CreateLogger<EventBusServiceBus>(),
                     subsManager: subsManager,
-                    options: eventBusOptions,
                     provider: provider.CreateScope().ServiceProvider);
 
                 onConfigure?.Invoke(
