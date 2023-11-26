@@ -158,14 +158,14 @@ namespace Ecommerce.EventBus.Azure
                     {
                         if (subscription.IsDynamic)
                         {
-                            var handler = scope.ServiceProvider.GetRequiredService(subscription.HandlerType) as IDynamicIntegrationEventHandler;
+                            var handler = ActivatorUtilities.CreateInstance(scope.ServiceProvider, subscription.HandlerType) as IDynamicIntegrationEventHandler;
                             if (handler == null) continue;
                             dynamic? eventData = JsonSerializer.Deserialize<dynamic>(message);
                             await handler.Handle(eventData);
                         }
                         else
                         {
-                            var handler = scope.ServiceProvider.GetRequiredService(subscription.HandlerType);
+                            var handler = ActivatorUtilities.CreateInstance(scope.ServiceProvider, subscription.HandlerType);
                             if (handler == null) continue;
                             var eventType = _subsManager.GetEventTypeByName(eventName);
                             if (eventType is null) continue;
