@@ -124,7 +124,7 @@ namespace Ecommerce.EventBus.Azure
         {
             _subscriptionProcessor.ProcessMessageAsync += async (psm) =>
                 {
-                    var eventName = $"{psm.Message.Subject}{INTEGRATION_EVENT_SUFIX}";
+                    var eventName = $"{psm.Message.Subject}";
                     var messageData = Encoding.UTF8.GetString(psm.Message.Body);
                     
                     // Complete the message so that it is not received again.
