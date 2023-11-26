@@ -39,7 +39,7 @@ namespace Ecommerce.EventBus.Azure
         public async Task PublishAsync(IntegrationEvent @event)
         {
             var eventName = @event.GetType().Name.Replace(INTEGRATION_EVENT_SUFIX, string.Empty);
-            var jsonMessage = JsonSerializer.Serialize(@event);
+            var jsonMessage = JsonSerializer.Serialize(@event, @event.GetType());
             var body = Encoding.UTF8.GetBytes(jsonMessage);
 
             var message = new ServiceBusMessage(body)
@@ -134,7 +134,7 @@ namespace Ecommerce.EventBus.Azure
                     }
                 };
             _subscriptionProcessor.ProcessErrorAsync += ExceptionReceivedHandler;
-
+            
             _subscriptionProcessor.StartProcessingAsync().GetAwaiter().GetResult();
         }
 
