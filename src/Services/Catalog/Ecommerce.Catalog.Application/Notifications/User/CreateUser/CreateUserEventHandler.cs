@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Catalog.Application.Repositories;
 using Ecommerce.EventBus.Events;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Ecommerce.Catalog.Application.Notifications.User.CreateUser;
@@ -23,6 +24,13 @@ public class CreateUserEventHandler
         try
         {
             await using var transaction = await _catalogContext.Database.BeginTransactionAsync();
+
+            var userFound = 
+                await _catalogContext.Users
+                    .FirstOrDefaultAsync(u => u.Email == @event.Email || u.Id == @event.Id);
+
+            if (userFound is not null)
+                return;
 
             await _catalogContext.Users.AddAsync(new Model.Identity.UserModel
             {
