@@ -172,7 +172,8 @@ internal class EventBusServiceBus : IEventBus
                         var integrationEvent = JsonSerializer.Deserialize(message, eventType);
                         if (integrationEvent is null) continue;
                         var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
-                        var tsk = concreteType?.GetMethod("Handle")?.Invoke(handler, new object[] { integrationEvent }) as Task;
+                        var tsk = concreteType?.GetMethod(nameof(IIntegrationEventHandler<IntegrationEvent>.Handle))?
+                            .Invoke(handler, new object[] { integrationEvent }) as Task;
                         if (tsk is not null)
                             await tsk.ConfigureAwait(false);
                     }
