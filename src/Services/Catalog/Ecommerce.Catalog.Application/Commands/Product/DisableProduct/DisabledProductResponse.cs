@@ -1,6 +1,6 @@
 ﻿namespace Ecommerce.Catalog.Application.Commands.Product.DeleteProduct;
 
-public class DeleteProductResponse
+public class DisabledProductResponse
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;

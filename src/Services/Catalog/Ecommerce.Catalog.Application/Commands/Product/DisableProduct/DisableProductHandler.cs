@@ -9,20 +9,20 @@ using System.Security.Claims;
 
 namespace Ecommerce.Catalog.Application.Commands.Product.DeleteProduct;
 
-public class DeleteProductHandler : IAppRequestHandler<DeleteProductRequest, Result<DeleteProductResponse>>
+public class DisableProductHandler : IAppRequestHandler<DisableProductRequest, Result<DisabledProductResponse>>
 {
     private readonly IEventBus _eventBus;
     private readonly CatalogContext _catalogContext;
     private readonly IClaimProvider _claimProvider;
 
-    public DeleteProductHandler(IClaimProvider principal, CatalogContext catalogContext, IEventBus eventBus)
+    public DisableProductHandler(IClaimProvider principal, CatalogContext catalogContext, IEventBus eventBus)
     {
         _eventBus = eventBus;
         _catalogContext = catalogContext;
         _claimProvider = principal;
     }
 
-    public async Task<Result<DeleteProductResponse>> Handle(DeleteProductRequest request, CancellationToken cancellationToken)
+    public async Task<Result<DisabledProductResponse>> Handle(DisableProductRequest request, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -32,7 +32,7 @@ public class DeleteProductHandler : IAppRequestHandler<DeleteProductRequest, Res
         var claimCompany = principal.GetCompany();
 
         if (!claimCompany.TryGetValue(out Guid companyId))
-            return Result<DeleteProductResponse>.Failed(claimCompany.Errors);
+            return Result<DisabledProductResponse>.Failed(claimCompany.Errors);
 
         using var transaction = await _catalogContext.Database.BeginTransactionAsync();
 
@@ -47,7 +47,7 @@ public class DeleteProductHandler : IAppRequestHandler<DeleteProductRequest, Res
         if (productCompany is null ||
             product is null)
             return ResultBuilderExtension
-                .CreateFailed<DeleteProductResponse>(Core.Exceptions.ErrorEnum.ProductNotFound);
+                .CreateFailed<DisabledProductResponse>(Core.Exceptions.ErrorEnum.ProductNotFound);
 
         _catalogContext.Products.Remove(product);
 
@@ -61,8 +61,8 @@ public class DeleteProductHandler : IAppRequestHandler<DeleteProductRequest, Res
         await transaction.CommitAsync();
         await _catalogContext.SaveChangesAsync();
 
-        return Result<DeleteProductResponse>.Success(
-            new DeleteProductResponse
+        return Result<DisabledProductResponse>.Success(
+            new DisabledProductResponse
             {
                 Id = product.Id,
                 Description = product.Description,
