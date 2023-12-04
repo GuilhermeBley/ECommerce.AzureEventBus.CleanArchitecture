@@ -25,7 +25,7 @@ builder.Services.AddEventBus(
     {
         eventBus.Subscribe<Ecommerce.EventBus.Events.CreateProductEvent,
             Ecommerce.Catalog.Application.Notifications.Product.CreateProduct.CreateProductEventHandler>();
-        eventBus.Subscribe<Ecommerce.EventBus.Events.DeleteProductEvent,
+        eventBus.Subscribe<Ecommerce.EventBus.Events.DisableProductEvent,
             Ecommerce.Catalog.Application.Notifications.Product.DeleteProduct.DeleteProductEventHandler>();
         eventBus.Subscribe<Ecommerce.EventBus.Events.UpdateProductEvent,
             Ecommerce.Catalog.Application.Notifications.Product.UpdateProduct.UpdateProductEventHandler>();

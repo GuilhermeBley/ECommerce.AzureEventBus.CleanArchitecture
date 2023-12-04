@@ -1,11 +1,8 @@
-﻿using Ecommerce.Catalog.Application.Commands.Product.CreateProduct;
-using Ecommerce.Catalog.Application.Notifications.Product.DeleteProduct;
-using Ecommerce.Catalog.Application.Repositories;
+﻿using Ecommerce.Catalog.Application.Repositories;
 using Ecommerce.Catalog.Application.Security;
 using Ecommerce.Catalog.Core.Extension;
 using Ecommerce.EventBus.Events;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace Ecommerce.Catalog.Application.Commands.Product.DeleteProduct;
 
@@ -51,7 +48,7 @@ public class DisableProductHandler : IAppRequestHandler<DisableProductRequest, R
 
         _catalogContext.Products.Remove(product);
 
-        await _eventBus.PublishAsync(new DeleteProductEvent
+        await _eventBus.PublishAsync(new DisableProductEvent
         { 
             Id = product.Id,
             Name = product.Name,

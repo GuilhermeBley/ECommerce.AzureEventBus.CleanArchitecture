@@ -1,6 +1,6 @@
 ﻿namespace Ecommerce.EventBus.Events;
 
-public class DeleteProductEvent : IntegrationEvent
+public class DisableProductEvent : IntegrationEvent
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
