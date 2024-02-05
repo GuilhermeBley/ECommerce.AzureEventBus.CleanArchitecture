@@ -20,12 +20,19 @@ public static class DIInfrastructureExtension
         => serviceDescriptors
         .AddScoped(factory);
 
-    public static IServiceCollection AddApplicationMediator(this IServiceCollection serviceDescriptors)
+    private static IServiceCollection AddApplicationMediator(this IServiceCollection serviceDescriptors)
         => serviceDescriptors
         .AddMediatR(options => options.RegisterServicesFromAssemblies(typeof(IAppMediator).Assembly))
         .AddSingleton<IAppMediator, MediatRAdapter>()
         .AddTransient(typeof(IRequestHandler<,>), typeof(RequestHandlerAdapter<,>))
-        .AddTransient(typeof(INotificationHandler<>), typeof(NotificationHandlerAdapter<>));
+        .AddTransient(typeof(INotificationHandler<>), typeof(NotificationHandlerAdapter<>))
+        .RegisterAsImplementedInterfaces(
+            assemblyToMap: typeof(IAppNotificationHandler<>).Assembly,
+            new []
+            {
+                typeof(IAppNotificationHandler<>),
+                typeof(IAppRequestHandler<,>),
+            });
 
     private static IServiceCollection AddApplicationContext(this IServiceCollection serviceDescriptors)
         => serviceDescriptors
